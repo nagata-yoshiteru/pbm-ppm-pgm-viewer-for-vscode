@@ -10,16 +10,10 @@
 		"Other"
 	],
 	"activationEvents": [
-        "onCommand:ppm-pgm-viewer-for-vscode.helloWorld"
+        "*"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
-		"commands": [
-			{
-				"command": "ppm-pgm-viewer-for-vscode.helloWorld",
-				"title": "Hello World"
-			}
-		]
 	},
 	"scripts": {
 		"vscode:prepublish": "yarn run package",
