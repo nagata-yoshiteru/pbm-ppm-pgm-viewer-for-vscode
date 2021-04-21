@@ -1,0 +1,29 @@
+name: master
+
+env:
+  NODE_VERSION: 12.x
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Use Node.js ${{ env.NODE_VERSION }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+    - name: Install node_modules
+      run: yarn
+    - name: Run Tests
+      uses: GabrielBB/xvfb-action@v1.2
+      with:
+        run: yarn test
