@@ -12,6 +12,10 @@
 
 ## Release Notes
 
+## 0.0.3
+
+- Add Zoom feature
+
 ### 0.0.2
 
 - Change behavior when opening unsupported file
