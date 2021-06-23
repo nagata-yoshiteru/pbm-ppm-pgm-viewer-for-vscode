@@ -10,26 +10,42 @@ const parseByteFormat = (byteData: Uint8Array) => {
     width = 1,
     height = 1,
     mc = 1,
-    k = 0;
-  while (i < byteData.byteLength && k < 3) {
-    while (i < byteData.byteLength && byteData[i++] !== 10);
-    if (i - 1 - j === 2) {
-      imgType = byteData.subarray(j, i - 1).toString();
-      console.log(`Type: ${imgType}`);
-      k++;
+    k = 0,
+    kl = 3;
+  while (k < kl) {
+    while (i < byteData.byteLength
+      && byteData[i] !== 9  // HT
+      && byteData[i] !== 10  // LF
+      && byteData[i] !== 13  // CR
+      && byteData[i] !== 32) {  // SPACE
+      i++;
+    };
+    if (byteData[j] === 35) {  // Comment Line
+      while (i < byteData.byteLength && byteData[i] !== 10) {  // LF
+        i++;
+      };
     } else {
-      const texts = byteData.subarray(j, i - 1).toString().split(" ");
-      if (texts.length === 1) {
-        mc = Number(texts[0]);
-        console.log(`Color: ${mc}`);
-        k++;
-      } else if (texts.length === 2) {
-        width = Number(texts[0]);
-        height = Number(texts[1]);
-        console.log(`Size: ${width}x${height}`);
-        k++;
+      switch (k) {
+        case 0:
+          imgType = byteData.subarray(j, i).toString();
+          console.log(`Type: ${imgType}`);
+          if (imgType === "P5" || imgType === "P6") kl++;
+          break;
+        case 1:
+          width = Number(byteData.subarray(j, i).toString());
+          break;
+        case 2:
+          height = Number(byteData.subarray(j, i).toString());
+          console.log(`Size: ${width}x${height}`);
+          break;
+        case 3:
+          mc = Number(byteData.subarray(j, i).toString());
+          console.log(`Color: ${mc}`);
+          break;
       }
+      k++;
     }
+    i++;
     j = i;
   }
 
