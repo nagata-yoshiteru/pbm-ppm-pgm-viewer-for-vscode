@@ -14,11 +14,11 @@ const parseByteFormat = (byteData: Uint8Array) => {
   while (i < byteData.byteLength && k < 3) {
     while (i < byteData.byteLength && byteData[i++] !== 10);
     if (i - 1 - j === 2) {
-      imgType = byteData.toString("utf-8", j, i - 1);
+      imgType = byteData.subarray(j, i - 1).toString();
       console.log(`Type: ${imgType}`);
       k++;
     } else {
-      const texts = byteData.toString("utf-8", j, i - 1).split(" ");
+      const texts = byteData.subarray(j, i - 1).toString().split(" ");
       if (texts.length === 1) {
         mc = Number(texts[0]);
         console.log(`Color: ${mc}`);

@@ -69,6 +69,6 @@ export default class ImagePreviewProvider implements vscode.CustomReadonlyEditor
     };
     const { status, width, height, imgType } = document.imageData;
     if (status === parse.PARSE_STATUS.SUCCESS)
-      webviewPanel.webview.html = generateHTMLCanvas(JSON.stringify(document.imageData), width, height, imgType);
+      webviewPanel.webview.html = generateHTMLCanvas(JSON.stringify(document.imageData), width || 0, height || 0, imgType || "");
   }
 }
