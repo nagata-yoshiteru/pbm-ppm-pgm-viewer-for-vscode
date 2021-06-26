@@ -15,10 +15,25 @@
 		"Other"
 	],
 	"activationEvents": [
-		"*"
+		"onCustomEditor:ppm-pgm-viewer-for-vscode.imagepreview"
 	],
 	"main": "./dist/extension.js",
-	"contributes": {},
+	"contributes": {
+		"customEditors": [
+			{
+				"viewType": "ppm-pgm-viewer-for-vscode.imagepreview",
+				"displayName": "Image Preview",
+				"selector": [
+					{
+						"filenamePattern": "*.ppm"
+					},
+					{
+						"filenamePattern": "*.pgm"
+					}
+				]
+			}
+		]
+	},
 	"scripts": {
 		"vscode:prepublish": "yarn run package",
 		"compile": "webpack",
