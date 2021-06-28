@@ -12,6 +12,10 @@
 
 ## Release Notes
 
+## 0.0.4
+
+- Use VSCode Editor API for image viewer
+
 ## 0.0.3
 
 - Add Zoom feature
