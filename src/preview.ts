@@ -1,8 +1,11 @@
-import * as vscode from 'vscode';
-import generateHTMLCanvas from './webview';
-import parse from './parsing';
+import * as vscode from "vscode";
+import generateHTMLCanvas from "./webview";
+import parse from "./parsing";
 
-class ImagePreviewDocument extends vscode.Disposable implements vscode.CustomDocument {
+class ImagePreviewDocument
+  extends vscode.Disposable
+  implements vscode.CustomDocument
+{
   readonly uri: vscode.Uri;
   private documentData: Uint8Array;
 
@@ -21,7 +24,9 @@ class ImagePreviewDocument extends vscode.Disposable implements vscode.CustomDoc
     this.documentData = initialData;
   }
 
-  public get getDocumentData() { return this.documentData; }
+  public get getDocumentData() {
+    return this.documentData;
+  }
 
   public get imageData() {
     return parse.parseByteFormat(this.getDocumentData);
@@ -32,24 +37,26 @@ class ImagePreviewDocument extends vscode.Disposable implements vscode.CustomDoc
   }
 }
 
-export default class ImagePreviewProvider implements vscode.CustomReadonlyEditorProvider<ImagePreviewDocument>{
-  private static viewType = 'ppm-pgm-viewer-for-vscode.imagepreview';
-  
+export default class ImagePreviewProvider
+  implements vscode.CustomReadonlyEditorProvider<ImagePreviewDocument>
+{
+  private static viewType = "ppm-pgm-viewer-for-vscode.imagepreview";
+
   public static register(context: vscode.ExtensionContext): vscode.Disposable {
     return vscode.window.registerCustomEditorProvider(
       ImagePreviewProvider.viewType,
       new ImagePreviewProvider(context),
-      { 
+      {
         supportsMultipleEditorsPerDocument: false,
         webviewOptions: {
-            retainContextWhenHidden: true
+          retainContextWhenHidden: true,
         },
-      },
+      }
     );
   }
 
-  constructor(private readonly _context: vscode.ExtensionContext) { }
-  
+  constructor(private readonly _context: vscode.ExtensionContext) {}
+
   async openCustomDocument(
     uri: vscode.Uri,
     _openContext: {},
@@ -65,10 +72,16 @@ export default class ImagePreviewProvider implements vscode.CustomReadonlyEditor
     _token: vscode.CancellationToken
   ): Promise<void> {
     webviewPanel.webview.options = {
-      enableScripts: true
+      enableScripts: true,
     };
     const { status, width, height, imgType } = document.imageData;
-    if (status === parse.PARSE_STATUS.SUCCESS)
-      webviewPanel.webview.html = generateHTMLCanvas(JSON.stringify(document.imageData), width || 0, height || 0, imgType || "");
+    if (status === parse.PARSE_STATUS.SUCCESS) {
+      webviewPanel.webview.html = generateHTMLCanvas(
+        JSON.stringify(document.imageData),
+        width || 0,
+        height || 0,
+        imgType || ""
+      );
+    }
   }
 }
