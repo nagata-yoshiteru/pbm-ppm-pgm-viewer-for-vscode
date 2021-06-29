@@ -10,10 +10,14 @@ const styles = {
   sizingButton: `width: 48%;
                  background-color: #dd4535;
                  display: inline-block;
-                 text-align: center;`,
+                 text-align: center;
+                 cursor: pointer;
+                 user-select: none;`,
   resetButton: `background-color: #dd4535;
                 text-align: center;
-                margin-bottom: 15px`,
+                margin-bottom: 15px;
+                cursor: pointer;
+                user-select: none;`,
 };
 
 const generateHTMLCanvas = (
@@ -34,6 +38,7 @@ const generateHTMLCanvas = (
           <p>Type: ${imgType}</p>
           <p>Width: ${width}px</p>
           <p>Height: ${height}px</p>
+          <p id="scale-display">Zoom: 100%</p>
           <div style="margin-bottom: 5px">
             <div onclick="scale = scale * 2; showImg(scale);" style="${styles.sizingButton}">+</div>
             <div onclick="scale = scale / 2; showImg(scale);" style="${styles.sizingButton}">-</div>
@@ -49,6 +54,7 @@ const generateHTMLCanvas = (
           const message = JSON.parse(jsonStr);
           let colorData = message.colorData;
           let canvas = document.getElementById('canvas-area');
+          let scaleDisplay = document.getElementById('scale-display');
           function showImg(scale) {
             let ctx = canvas.getContext('2d');
             canvas.width = ${width} * scale;
@@ -60,6 +66,7 @@ const generateHTMLCanvas = (
                 ctx.fillRect(x * scale, y * scale, scale, scale);
               }
             }
+            scaleDisplay.innerHTML = "Zoom: " + String(scale * 100) + "%";
           }
           showImg(scale);
 
