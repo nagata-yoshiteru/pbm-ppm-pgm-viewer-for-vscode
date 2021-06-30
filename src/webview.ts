@@ -3,18 +3,15 @@ const styles = {
            margin: auto;
            display: block;`,
   info: `position: fixed;
-         background-color: #ec5340;
          padding: 0px 15px;
          margin: 15px 15px;
          width: 100px;`,
   sizingButton: `width: 48%;
-                 background-color: #dd4535;
                  display: inline-block;
                  text-align: center;
                  cursor: pointer;
                  user-select: none;`,
-  resetButton: `background-color: #dd4535;
-                text-align: center;
+  resetButton: `text-align: center;
                 margin-bottom: 15px;
                 cursor: pointer;
                 user-select: none;`,
@@ -24,7 +21,9 @@ const generateHTMLCanvas = (
   data: string,
   width: number,
   height: number,
-  imgType: string
+  imgType: string,
+  bgColor: string,
+  btnColor: string
 ): string => {
   return `
     <!DOCTYPE html>
@@ -34,16 +33,16 @@ const generateHTMLCanvas = (
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
       </head>
       <body>
-        <div style="${styles.info}">
+        <div style="${styles.info} background-color: ${bgColor};">
           <p>Type: ${imgType}</p>
           <p>Width: ${width}px</p>
           <p>Height: ${height}px</p>
           <p id="scale-display">Zoom: 100%</p>
           <div style="margin-bottom: 5px">
-            <div onclick="scale = scale * 2; showImg(scale);" style="${styles.sizingButton}">+</div>
-            <div onclick="scale = scale / 2; showImg(scale);" style="${styles.sizingButton}">-</div>
+            <div onclick="scale = scale * 2; showImg(scale);" style="${styles.sizingButton} background-color: ${btnColor};">+</div>
+            <div onclick="scale = scale / 2; showImg(scale);" style="${styles.sizingButton} background-color: ${btnColor};">-</div>
           </div>
-          <div onclick="scale = 1; showImg(scale);" style="${styles.resetButton}">Reset</div>
+          <div onclick="scale = 1; showImg(scale);" style="${styles.resetButton} background-color: ${btnColor};">Reset</div>
         </div>
         <div id="canvas-container" style="overflow: auto">
           <canvas width="${width}" height="${height}" id="canvas-area" style="${styles.canvas}"></canvas>

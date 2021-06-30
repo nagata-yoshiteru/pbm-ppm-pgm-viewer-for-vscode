@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import validateColor from "validate-color";
 import generateHTMLCanvas from "./webview";
 import parse from "./parsing";
 
@@ -75,12 +76,16 @@ export default class ImagePreviewProvider
       enableScripts: true,
     };
     const { status, width, height, imgType } = document.imageData;
+    const bgColor = String(vscode.workspace.getConfiguration(ImagePreviewProvider.viewType).get('panelBackgroundColor'));
+    const btnColor = String(vscode.workspace.getConfiguration(ImagePreviewProvider.viewType).get('panelButtonColor'));
     if (status === parse.PARSE_STATUS.SUCCESS) {
       webviewPanel.webview.html = generateHTMLCanvas(
         JSON.stringify(document.imageData),
         width || 0,
         height || 0,
-        imgType || ""
+        imgType || "",
+        validateColor(bgColor) ? bgColor : "#ec5340",
+        validateColor(btnColor) ? btnColor : "#dd4535",
       );
     }
   }

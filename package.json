@@ -32,7 +32,24 @@
 					}
 				]
 			}
-		]
+		],
+		"configuration": {
+			"title": "PPM/PGM Viewer Image Preview",
+			"properties": {
+				"ppm-pgm-viewer-for-vscode.imagepreview.panelBackgroundColor": {
+					"type": "string",
+					"scope": "application",
+					"default": "#ec5340",
+					"description": "Background color of the information panel."
+				},
+				"ppm-pgm-viewer-for-vscode.imagepreview.panelButtonColor": {
+					"type": "string",
+					"scope": "application",
+					"default": "#dd4535",
+					"description": "Button color in the information panel."
+				}
+			}
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "yarn run package",
@@ -62,5 +79,8 @@
 		"vscode-test": "^1.5.0",
 		"webpack": "^5.19.0",
 		"webpack-cli": "^4.4.0"
+	},
+	"dependencies": {
+		"validate-color": "^2.1.1"
 	}
 }
