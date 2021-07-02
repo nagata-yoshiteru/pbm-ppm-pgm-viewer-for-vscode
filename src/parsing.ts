@@ -29,7 +29,7 @@ const parseByteFormat = (byteData: Uint8Array) => {
         case 0:
           imgType = byteData.subarray(j, i).toString();
           console.log(`Type: ${imgType}`);
-          if (imgType === "P5" || imgType === "P6") kl++;
+          if (imgType === "P2" || imgType === "P3" || imgType === "P5" || imgType === "P6") kl++;
           break;
         case 1:
           width = Number(byteData.subarray(j, i).toString());
@@ -51,6 +51,12 @@ const parseByteFormat = (byteData: Uint8Array) => {
 
   let colorData: { r: number; g: number; b: number }[] = [];
   switch (imgType) {
+    case "P2":
+      // The rest of byteData (starting from byteData[i]) should be the each pixel's data formatted in P2.
+      break;
+    case "P3":
+      // The rest of byteData (starting from byteData[i]) should be the each pixel's data formatted in P3.
+      break;
     case "P5":
       for (let index = i; index < byteData.byteLength; index++) {
         colorData.push({
