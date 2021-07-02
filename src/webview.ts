@@ -1,30 +1,37 @@
-const styles = {
-  canvas: `padding: 0;
-           margin: auto;
-           display: block;`,
-  info: `position: fixed;
-         padding: 0px 15px;
-         margin: 15px 15px;
-         width: 100px;`,
-  sizingButton: `width: 48%;
-                 display: inline-block;
-                 text-align: center;
-                 cursor: pointer;
-                 user-select: none;`,
-  resetButton: `text-align: center;
-                margin-bottom: 15px;
-                cursor: pointer;
-                user-select: none;`,
-};
+import * as vscode from "vscode";
+import validateColor from "validate-color";
+import { imagePreviewProviderViewType } from "./const";
 
 const generateHTMLCanvas = (
   data: string,
   width: number,
   height: number,
-  imgType: string,
-  bgColor: string,
-  btnColor: string
+  imgType: string
 ): string => {
+  const bgColor = String(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('panelBackgroundColor'));
+  const btnColor = String(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('panelButtonColor'));
+  const styles = {
+    canvas: `padding: 0;
+            margin: auto;
+            display: block;`,
+    info: `position: fixed;
+          background-color: ${validateColor(bgColor) ? bgColor : "#ec5340"};
+          padding: 0px 15px;
+          margin: 15px 15px;
+          width: 100px;`,
+    sizingButton: `width: 48%;
+                  background-color: ${validateColor(btnColor) ? btnColor : "#dd4535"};
+                  display: inline-block;
+                  text-align: center;
+                  cursor: pointer;
+                  user-select: none;`,
+    resetButton: `background-color: ${validateColor(btnColor) ? btnColor : "#dd4535"};
+                  text-align: center;
+                  margin-bottom: 15px;
+                  cursor: pointer;
+                  user-select: none;`,
+  };
+
   return `
     <!DOCTYPE html>
     <html lang="en">
@@ -33,16 +40,16 @@ const generateHTMLCanvas = (
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
       </head>
       <body>
-        <div style="${styles.info} background-color: ${bgColor};">
+        <div style="${styles.info}">
           <p>Type: ${imgType}</p>
           <p>Width: ${width}px</p>
           <p>Height: ${height}px</p>
           <p id="scale-display">Zoom: 100%</p>
           <div style="margin-bottom: 5px">
-            <div onclick="scale = scale * 2; showImg(scale);" style="${styles.sizingButton} background-color: ${btnColor};">+</div>
-            <div onclick="scale = scale / 2; showImg(scale);" style="${styles.sizingButton} background-color: ${btnColor};">-</div>
+            <div onclick="scale = scale * 2; showImg(scale);" style="${styles.sizingButton}">+</div>
+            <div onclick="scale = scale / 2; showImg(scale);" style="${styles.sizingButton}">-</div>
           </div>
-          <div onclick="scale = 1; showImg(scale);" style="${styles.resetButton} background-color: ${btnColor};">Reset</div>
+          <div onclick="scale = 1; showImg(scale);" style="${styles.resetButton}">Reset</div>
         </div>
         <div id="canvas-container" style="overflow: auto">
           <canvas width="${width}" height="${height}" id="canvas-area" style="${styles.canvas}"></canvas>

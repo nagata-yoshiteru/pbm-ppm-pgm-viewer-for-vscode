@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
-import validateColor from "validate-color";
 import generateHTMLCanvas from "./webview";
 import parse from "./parsing";
+import { imagePreviewProviderViewType } from "./const";
 
 class ImagePreviewDocument
   extends vscode.Disposable
@@ -41,7 +41,7 @@ class ImagePreviewDocument
 export default class ImagePreviewProvider
   implements vscode.CustomReadonlyEditorProvider<ImagePreviewDocument>
 {
-  private static viewType = "ppm-pgm-viewer-for-vscode.imagepreview";
+  private static viewType = imagePreviewProviderViewType;
 
   public static register(context: vscode.ExtensionContext): vscode.Disposable {
     return vscode.window.registerCustomEditorProvider(
@@ -76,16 +76,12 @@ export default class ImagePreviewProvider
       enableScripts: true,
     };
     const { status, width, height, imgType } = document.imageData;
-    const bgColor = String(vscode.workspace.getConfiguration(ImagePreviewProvider.viewType).get('panelBackgroundColor'));
-    const btnColor = String(vscode.workspace.getConfiguration(ImagePreviewProvider.viewType).get('panelButtonColor'));
     if (status === parse.PARSE_STATUS.SUCCESS) {
       webviewPanel.webview.html = generateHTMLCanvas(
         JSON.stringify(document.imageData),
         width || 0,
         height || 0,
-        imgType || "",
-        validateColor(bgColor) ? bgColor : "#ec5340",
-        validateColor(btnColor) ? btnColor : "#dd4535",
+        imgType || ""
       );
     }
   }
