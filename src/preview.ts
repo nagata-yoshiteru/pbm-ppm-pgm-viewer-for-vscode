@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import generateHTMLCanvas from "./webview";
 import parse from "./parsing";
+import { imagePreviewProviderViewType } from "./const";
 
 class ImagePreviewDocument
   extends vscode.Disposable
@@ -40,7 +41,7 @@ class ImagePreviewDocument
 export default class ImagePreviewProvider
   implements vscode.CustomReadonlyEditorProvider<ImagePreviewDocument>
 {
-  private static viewType = "ppm-pgm-viewer-for-vscode.imagepreview";
+  private static viewType = imagePreviewProviderViewType;
 
   public static register(context: vscode.ExtensionContext): vscode.Disposable {
     return vscode.window.registerCustomEditorProvider(

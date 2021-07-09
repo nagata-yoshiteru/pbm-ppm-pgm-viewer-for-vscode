@@ -1,24 +1,6 @@
-const styles = {
-  canvas: `padding: 0;
-           margin: auto;
-           display: block;`,
-  info: `position: fixed;
-         background-color: #ec5340;
-         padding: 0px 15px;
-         margin: 15px 15px;
-         width: 100px;`,
-  sizingButton: `width: 48%;
-                 background-color: #dd4535;
-                 display: inline-block;
-                 text-align: center;
-                 cursor: pointer;
-                 user-select: none;`,
-  resetButton: `background-color: #dd4535;
-                text-align: center;
-                margin-bottom: 15px;
-                cursor: pointer;
-                user-select: none;`,
-};
+import * as vscode from "vscode";
+import validateColor from "validate-color";
+import { imagePreviewProviderViewType } from "./const";
 
 const generateHTMLCanvas = (
   data: string,
@@ -26,6 +8,30 @@ const generateHTMLCanvas = (
   height: number,
   imgType: string
 ): string => {
+  const bgColor = String(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('panelBackgroundColor'));
+  const btnColor = String(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('panelButtonColor'));
+  const styles = {
+    canvas: `padding: 0;
+            margin: auto;
+            display: block;`,
+    info: `position: fixed;
+          background-color: ${validateColor(bgColor) ? bgColor : "#ec5340"};
+          padding: 0px 15px;
+          margin: 15px 15px;
+          width: 100px;`,
+    sizingButton: `width: 48%;
+                  background-color: ${validateColor(btnColor) ? btnColor : "#dd4535"};
+                  display: inline-block;
+                  text-align: center;
+                  cursor: pointer;
+                  user-select: none;`,
+    resetButton: `background-color: ${validateColor(btnColor) ? btnColor : "#dd4535"};
+                  text-align: center;
+                  margin-bottom: 15px;
+                  cursor: pointer;
+                  user-select: none;`,
+  };
+
   return `
     <!DOCTYPE html>
     <html lang="en">
