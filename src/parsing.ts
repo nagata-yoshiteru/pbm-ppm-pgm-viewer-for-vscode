@@ -48,7 +48,7 @@ const parseByteFormat = (byteData: Uint8Array) => {
     i++;
     j = i;
   }
-
+  
   let colorData: { r: number; g: number; b: number }[] = [];
   switch (imgType) {
     case "P2":
