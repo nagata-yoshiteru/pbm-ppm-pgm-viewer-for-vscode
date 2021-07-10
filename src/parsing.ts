@@ -3,6 +3,49 @@ const PARSE_STATUS = {
   FAILURE: "FAILURE",
 };
 
+const getNextByte = (data: Uint8Array, index: number) => {
+  // Once this function returns, its should return:
+  // 1) The next interpreted and casted byte
+  // 2) The index of the byte immediately following the 
+  //    parsed byte
+
+  const SPACE = ' '.charCodeAt(0);
+  const CR = 0x0D;
+  const LF = 0x0A;
+  const HASH = '#'.charCodeAt(0);
+
+  let byteStr = '';
+
+  let i = index;
+  while (i < data.length) {
+    if (data[i] === SPACE) {
+      while (data[i] === SPACE && i < data.length) {
+        i++;
+      }
+    }
+    else if (data[i] === HASH && i < data.length) {
+      while ((data[i] !== CR || data[i] !== LF) && i < data.length) {
+        i++;
+      }
+      if (data[i] === LF) {
+        i++;
+      }
+    }
+    else if (data[i] === CR || data[i] === LF) {
+      i++;
+    }
+    else {
+      while (data[i] !== SPACE && data[i] !== CR && data[i] !== LF && data[i] !== HASH && i < data.length) {
+        byteStr += String.fromCharCode(data[i]);
+        i++;
+      }
+      break;
+    }
+  }
+
+  return [ parseInt(byteStr, 10), i ];
+};
+
 const parseByteFormat = (byteData: Uint8Array) => {
   let i = 0,
     j = 0,
@@ -51,12 +94,44 @@ const parseByteFormat = (byteData: Uint8Array) => {
   
   let colorData: { r: number; g: number; b: number }[] = [];
   switch (imgType) {
-    case "P2":
+    case "P2": {
       // The rest of byteData (starting from byteData[i]) should be the each pixel's data formatted in P2.
+      let index = i;
+      while (index < byteData.length - 1) {
+        const pixel : { r: number, g: number, b: number} = { r: 0, g: 0, b: 0};
+        const data = getNextByte(byteData, index);
+        const value = Math.floor(data[0] / mc * 255);
+        pixel["r"] = value;
+        pixel["g"] = value;
+        pixel["b"] = value;
+        index = data[1];
+
+        colorData.push(pixel);
+      }
       break;
-    case "P3":
+    }
+    case "P3": {
       // The rest of byteData (starting from byteData[i]) should be the each pixel's data formatted in P3.
+      let index = i;
+      while (index < byteData.length - 1) {
+        const pixel : { r: number, g: number, b: number} = { r: 0, g: 0, b: 0};
+        
+        let data = getNextByte(byteData, index);
+        pixel["r"] = Math.floor(data[0] / mc * 255);
+        index = data[1];
+        
+        data = getNextByte(byteData, index);
+        pixel["g"] = Math.floor(data[0] / mc * 255);
+        index = data[1];
+        
+        data = getNextByte(byteData, index);
+        pixel["b"] = Math.floor(data[0] / mc * 255);
+        index = data[1];
+
+        colorData.push(pixel);
+      }
       break;
+    }
     case "P5":
       for (let index = i; index < byteData.byteLength; index++) {
         colorData.push({
