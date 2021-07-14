@@ -61,18 +61,15 @@ const parseByteFormat = (byteData: Uint8Array) => {
   while (k < kl) {
     while (
       i < byteData.byteLength &&
-      byteData[i] !== 9 && // HT
-      byteData[i] !== 10 && // LF
-      byteData[i] !== 13 && // CR
-      byteData[i] !== 32
+      byteData[i] !== 9 &&   // HT
+      byteData[i] !== 10 &&  // LF
+      byteData[i] !== 13 &&  // CR
+      byteData[i] !== 32     // SPACE
     ) {
-      // SPACE
       i++;
     }
-    if (byteData[j] === 35) {
-      // Comment Line
-      while (i < byteData.byteLength && byteData[i] !== 10) {
-        // LF
+    if (byteData[j] === 35) { // Comment Line
+      while (i < byteData.byteLength && byteData[i] !== 10) { // LF
         i++;
       }
     } else {
@@ -103,6 +100,15 @@ const parseByteFormat = (byteData: Uint8Array) => {
       k++;
     }
     i++;
+    while (
+      i < byteData.byteLength && (
+      byteData[i] === 9 ||   // HT
+      byteData[i] === 10 ||  // LF
+      byteData[i] === 13 ||  // CR
+      byteData[i] === 32)    // SPACE
+    ) {
+      i++;
+    }
     j = i;
   }
 
