@@ -7,7 +7,7 @@
 		"type": "git",
 		"url": "https://github.com/nagata-yoshiteru/ppm-pgm-viewer-for-vscode"
 	},
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"icon": "images/icon.png",
 	"engines": {
 		"vscode": "^1.55.0"
