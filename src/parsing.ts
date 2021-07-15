@@ -3,17 +3,28 @@ const PARSE_STATUS = {
   FAILURE: "FAILURE",
 };
 
+const SPACE = " ".charCodeAt(0);
+const CR = 0x0d;
+const LF = 0x0a;
+const HASH = "#".charCodeAt(0);
+const TAB = "\t".charCodeAt(0);
+
+const isWhiteSpace = (byteData: Uint8Array, i: number): boolean => {
+  const byte = byteData[i];
+  return (
+    byte === SPACE ||
+    byte === CR ||
+    byte === LF ||
+    byte === HASH ||
+    byte === TAB
+  );
+};
+
 const getNextByte = (data: Uint8Array, index: number) => {
   // Once this function returns, its should return:
   // 1) The next interpreted and casted byte
   // 2) The index of the byte immediately following the
   //    parsed byte
-
-  const SPACE = " ".charCodeAt(0);
-  const CR = 0x0d;
-  const LF = 0x0a;
-  const HASH = "#".charCodeAt(0);
-
   let byteStr = "";
 
   let i = index;
@@ -33,10 +44,7 @@ const getNextByte = (data: Uint8Array, index: number) => {
       i++;
     } else {
       while (
-        data[i] !== SPACE &&
-        data[i] !== CR &&
-        data[i] !== LF &&
-        data[i] !== HASH &&
+        !isWhiteSpace(data, i) &&
         i < data.length
       ) {
         byteStr += String.fromCharCode(data[i]);
@@ -61,10 +69,7 @@ const parseByteFormat = (byteData: Uint8Array) => {
   while (k < kl) {
     while (
       i < byteData.byteLength &&
-      byteData[i] !== 9 &&   // HT
-      byteData[i] !== 10 &&  // LF
-      byteData[i] !== 13 &&  // CR
-      byteData[i] !== 32     // SPACE
+      !isWhiteSpace(byteData, i)
     ) {
       i++;
     }
@@ -101,11 +106,8 @@ const parseByteFormat = (byteData: Uint8Array) => {
     }
     i++;
     while (
-      i < byteData.byteLength && (
-      byteData[i] === 9 ||   // HT
-      byteData[i] === 10 ||  // LF
-      byteData[i] === 13 ||  // CR
-      byteData[i] === 32)    // SPACE
+      i < byteData.byteLength &&
+      isWhiteSpace(byteData, i)
     ) {
       i++;
     }
