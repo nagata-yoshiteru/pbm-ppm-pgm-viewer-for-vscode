@@ -15,6 +15,9 @@ Built by [Yoshietru Nagata](https://github.com/nagata-yoshiteru) 🇯🇵 and [B
 
 ## Extension Settings
 
+- `ppm-pgm-viewer-for-vscode.imagepreview.panelBackgroundColor`: Zoom panel background color (default is `#ec5340`)
+- `ppm-pgm-viewer-for-vscode.imagepreview.panelButtonColor` : Zoom panel button color (default is `#dd4535`)
+
 ## Known Issues
  - None that we know of, but feel free to leave us a github issue :)
 
