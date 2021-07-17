@@ -7,7 +7,8 @@
 		"type": "git",
 		"url": "https://github.com/nagata-yoshiteru/ppm-pgm-viewer-for-vscode"
 	},
-	"version": "0.0.4",
+	"version": "0.0.5",
+	"icon": "images/icon.png",
 	"engines": {
 		"vscode": "^1.55.0"
 	},
@@ -40,13 +41,13 @@
 					"type": "string",
 					"scope": "application",
 					"default": "#ec5340",
-					"description": "Background color of the information panel."
+					"description": "Background color of the zoom panel."
 				},
 				"ppm-pgm-viewer-for-vscode.imagepreview.panelButtonColor": {
 					"type": "string",
 					"scope": "application",
 					"default": "#dd4535",
-					"description": "Button color in the information panel."
+					"description": "Button color in the zoom panel."
 				}
 			}
 		}
