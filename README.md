@@ -23,6 +23,10 @@ Built by [Yoshietru Nagata](https://github.com/nagata-yoshiteru) 🇯🇵 and [B
 
 ## Release Notes
 
+## 0.0.6
+
+- Bugfix for loading headers of commented imgs
+
 ## 0.0.5
 
 - Add image scrolling and panning

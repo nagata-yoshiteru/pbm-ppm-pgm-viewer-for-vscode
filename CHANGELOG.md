@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.0.6
+
+- Bugfix for loading headers of commented imgs
+
 ## 0.0.5
 
 - Add image scrolling and panning
