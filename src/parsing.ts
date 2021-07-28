@@ -15,7 +15,6 @@ const isWhiteSpace = (byteData: Uint8Array, i: number): boolean => {
     byte === SPACE ||
     byte === CR ||
     byte === LF ||
-    byte === HASH ||
     byte === TAB
   );
 };
@@ -45,6 +44,7 @@ const getNextByte = (data: Uint8Array, index: number) => {
     } else {
       while (
         !isWhiteSpace(data, i) &&
+        data[i] !== HASH &&
         i < data.length
       ) {
         byteStr += String.fromCharCode(data[i]);
