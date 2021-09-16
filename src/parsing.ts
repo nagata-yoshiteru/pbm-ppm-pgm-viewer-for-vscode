@@ -58,6 +58,7 @@ const getNextByte = (data: Uint8Array, index: number) => {
 };
 
 const parseByteFormat = (byteData: Uint8Array) => {
+  console.time('Parsing');
   let i = 0,
     j = 0,
     imgType = "P0",
@@ -114,18 +115,15 @@ const parseByteFormat = (byteData: Uint8Array) => {
     j = i;
   }
 
-  let colorData: { r: number; g: number; b: number }[] = [];
+  let colorData: number[][] = [];
   switch (imgType) {
     case "P2": {
       // The rest of byteData (starting from byteData[i]) should be the each pixel's data formatted in P2.
       let index = i;
       while (index < byteData.length - 1) {
-        const pixel: { r: number; g: number; b: number } = { r: 0, g: 0, b: 0 };
         const data = getNextByte(byteData, index);
         const value = Math.floor((data[0] / mc) * 255);
-        pixel["r"] = value;
-        pixel["g"] = value;
-        pixel["b"] = value;
+        const pixel: number[] = [value, value, value];
         index = data[1];
 
         colorData.push(pixel);
@@ -136,19 +134,13 @@ const parseByteFormat = (byteData: Uint8Array) => {
       // The rest of byteData (starting from byteData[i]) should be the each pixel's data formatted in P3.
       let index = i;
       while (index < byteData.length - 1) {
-        const pixel: { r: number; g: number; b: number } = { r: 0, g: 0, b: 0 };
+        const pixel: number[] = [];
 
-        let data = getNextByte(byteData, index);
-        pixel["r"] = Math.floor((data[0] / mc) * 255);
-        index = data[1];
-
-        data = getNextByte(byteData, index);
-        pixel["g"] = Math.floor((data[0] / mc) * 255);
-        index = data[1];
-
-        data = getNextByte(byteData, index);
-        pixel["b"] = Math.floor((data[0] / mc) * 255);
-        index = data[1];
+        for (let j = 0; j < 3; j++) {
+          const data = getNextByte(byteData, index);
+          pixel[j] = Math.floor((data[0] / mc) * 255);
+          index = data[1];
+        }
 
         colorData.push(pixel);
       }
@@ -156,26 +148,19 @@ const parseByteFormat = (byteData: Uint8Array) => {
     }
     case "P5":
       for (let index = i; index < byteData.byteLength; index++) {
-        colorData.push({
-          r: byteData[index],
-          g: byteData[index],
-          b: byteData[index],
-        });
+        colorData.push([byteData[index], byteData[index],  byteData[index]]);
       }
       break;
     case "P6":
       for (let index = i; index < byteData.byteLength; index = index + 3) {
-        colorData.push({
-          r: byteData[index],
-          g: byteData[index + 1],
-          b: byteData[index + 2],
-        });
+        colorData.push([byteData[index], byteData[index + 1], byteData[index + 2]]);
       }
       break;
     default:
       return { status: PARSE_STATUS.FAILURE };
   }
 
+  console.timeEnd('Parsing');
   return { status: PARSE_STATUS.SUCCESS, colorData, width, height, imgType };
 };
 
