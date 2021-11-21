@@ -1,6 +1,6 @@
 # [PPM/PGM Viewer for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ngtystr.ppm-pgm-viewer-for-vscode)
 
-Built by [Yoshietru Nagata](https://github.com/nagata-yoshiteru) 🇯🇵 and [Ben Weisz](https://github.com/BenWeisz) 🇨🇦
+Built by [Yoshietru Nagata](https://github.com/nagata-yoshiteru) 🇯🇵 , [Ben Weisz](https://github.com/BenWeisz) 🇨🇦 and [Kensuke Suzuki](https://szk18.github.io/) 🇯🇵
 
 
 ## Features
@@ -22,6 +22,11 @@ Built by [Yoshietru Nagata](https://github.com/nagata-yoshiteru) 🇯🇵 and [B
  - None that we know of, but feel free to leave us a github issue :)
 
 ## Release Notes
+
+## 0.0.7
+
+- Zoom in and out with `Ctrl` key + mouse scroll
+- Security fix
 
 ## 0.0.6
 

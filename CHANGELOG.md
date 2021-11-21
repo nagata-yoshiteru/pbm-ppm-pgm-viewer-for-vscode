@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.0.7
+
+- Zoom in and out with `Ctrl` key + mouse scroll
+- Security fix
+
 ## 0.0.6
 
 - Bugfix for loading headers of commented imgs
