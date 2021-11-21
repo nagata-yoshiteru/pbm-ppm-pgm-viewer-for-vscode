@@ -76,6 +76,19 @@ const generateHTMLCanvas = (
           }
           showImg(scale);
 
+          function zoom(e) {
+            e.preventDefault();
+            if(!e.ctrlKey) return;
+            if(e.deltaY < 0) {
+              scale = scale * 2;
+            } else {
+              scale = scale / 2;
+            }
+            showImg(scale);
+          }
+
+          window.addEventListener('wheel', zoom);
+
           const lastPos = { x: 0, y: 0 };
           let isDragging = false;
           const canvasContainer = document.getElementById('canvas-container');
