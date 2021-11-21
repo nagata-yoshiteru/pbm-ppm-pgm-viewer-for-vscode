@@ -87,7 +87,7 @@ const generateHTMLCanvas = (
             showImg(scale);
           }
 
-          canvas.addEventListener('wheel', zoom);
+          window.addEventListener('wheel', zoom);
 
           const lastPos = { x: 0, y: 0 };
           let isDragging = false;
