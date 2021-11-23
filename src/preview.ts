@@ -67,6 +67,21 @@ export default class ImagePreviewProvider
     return document;
   }
 
+  private _updateWebView(
+    newDocument: ImagePreviewDocument,
+    webviewPanel: vscode.WebviewPanel
+  ) {
+    const { status, width, height, imgType } = newDocument.imageData;
+    if (status === parse.PARSE_STATUS.SUCCESS) {
+      webviewPanel.webview.html = generateHTMLCanvas(
+        JSON.stringify(newDocument.imageData),
+        width || 0,
+        height || 0,
+        imgType || ""
+      );
+    }
+  }
+
   async resolveCustomEditor(
     document: ImagePreviewDocument,
     webviewPanel: vscode.WebviewPanel,
@@ -75,14 +90,18 @@ export default class ImagePreviewProvider
     webviewPanel.webview.options = {
       enableScripts: true,
     };
-    const { status, width, height, imgType } = document.imageData;
-    if (status === parse.PARSE_STATUS.SUCCESS) {
-      webviewPanel.webview.html = generateHTMLCanvas(
-        JSON.stringify(document.imageData),
-        width || 0,
-        height || 0,
-        imgType || ""
+    this._updateWebView(document, webviewPanel);
+
+    let watcher = vscode.workspace.createFileSystemWatcher(document.uri.path);
+    const changeFileSubscription = watcher.onDidChange(async (e) => {
+      const newDocument = await ImagePreviewDocument.create(
+        vscode.Uri.parse(e.path)
       );
-    }
+      this._updateWebView(newDocument, webviewPanel);
+    });
+
+    webviewPanel.onDidDispose(() => {
+      changeFileSubscription.dispose();
+    });
   }
 }
