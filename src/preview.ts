@@ -92,12 +92,18 @@ export default class ImagePreviewProvider
     };
     this._updateWebView(document, webviewPanel);
 
-    let watcher = vscode.workspace.createFileSystemWatcher(document.uri.path);
+    const relativePath = vscode.workspace.asRelativePath(document.uri);
+    console.log("Opening File: " + relativePath);
+    let watcher = vscode.workspace.createFileSystemWatcher("**/" + relativePath);  // possible to match another image
     const changeFileSubscription = watcher.onDidChange(async (e) => {
-      const newDocument = await ImagePreviewDocument.create(
-        vscode.Uri.parse(e.path)
-      );
-      this._updateWebView(newDocument, webviewPanel);
+      console.log("Event: " + vscode.workspace.asRelativePath(e));
+      if (relativePath === vscode.workspace.asRelativePath(e)) {  // filter an event
+        console.log("Changed: " + vscode.workspace.asRelativePath(e));
+        const newDocument = await ImagePreviewDocument.create(
+          vscode.Uri.parse(e.path)
+        );
+        this._updateWebView(newDocument, webviewPanel);
+      }
     });
 
     webviewPanel.onDidDispose(() => {
