@@ -97,7 +97,7 @@ export default class ImagePreviewProvider
     let watcher = vscode.workspace.createFileSystemWatcher("**/" + relativePath);  // possible to match another image
     const changeFileSubscription = watcher.onDidChange(async (e) => {
       console.log("Event: " + vscode.workspace.asRelativePath(e));
-      if (relativePath === vscode.workspace.asRelativePath(e)) {  // filter an event
+      if (document.uri.path === e.path) {  // filter an event
         console.log("Changed: " + vscode.workspace.asRelativePath(e));
         const newDocument = await ImagePreviewDocument.create(
           vscode.Uri.parse(e.path)
