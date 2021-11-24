@@ -41,9 +41,9 @@ const generateHTMLCanvas = (
       </head>
       <body>
         <div style="${styles.info}">
-          <p>Type: ${imgType}</p>
-          <p>Width: ${width}px</p>
-          <p>Height: ${height}px</p>
+          <p id="type-display">Type: ${imgType}</p>
+          <p id="width-display">Width: ${width}px</p>
+          <p id="height-display">Height: ${height}px</p>
           <p id="scale-display">Zoom: 100%</p>
           <div style="margin-bottom: 5px">
             <div onclick="scale = scale * 2; showImg(scale);" style="${styles.sizingButton}">+</div>
@@ -56,22 +56,28 @@ const generateHTMLCanvas = (
         </div>
         <script>
           let scale = 1;
-          let jsonStr = '${data}';
-          const message = JSON.parse(jsonStr);
-          let colorData = message.colorData;
-          let canvas = document.getElementById('canvas-area');
-          let scaleDisplay = document.getElementById('scale-display');
+          const jsonStr = '${data}';
+          let message = JSON.parse(jsonStr);
+          const canvas = document.getElementById('canvas-area');
+          const typeDisplay = document.getElementById('type-display');
+          const widthDisplay = document.getElementById('width-display');
+          const heightDisplay = document.getElementById('height-display');
+          const scaleDisplay = document.getElementById('scale-display');
           function showImg(scale) {
+            const { colorData, width, height, imgType } = message;
             let ctx = canvas.getContext('2d');
-            canvas.width = ${width} * scale;
-            canvas.height = ${height} * scale;
-            for (let x = 0; x < ${width}; x++){
-              for (let y = 0; y < ${height}; y++){
-                let color = colorData[(y * ${width}) + x];
+            canvas.width = width * scale;
+            canvas.height = height * scale;
+            for (let x = 0; x < width; x++){
+              for (let y = 0; y < height; y++){
+                let color = colorData[(y * width) + x];
                 ctx.fillStyle = "rgba(" + color.r + "," + color.g + "," + color.b + "," + 1.0 + ")";
                 ctx.fillRect(x * scale, y * scale, scale, scale);
               }
             }
+            typeDisplay.innerHTML = "Type: " + imgType;
+            widthDisplay.innerHTML = "Width: " + String(width) + "px";
+            heightDisplay.innerHTML = "Height: " + String(height) + "px";
             scaleDisplay.innerHTML = "Zoom: " + String(scale * 100) + "%";
           }
           showImg(scale);
@@ -124,6 +130,11 @@ const generateHTMLCanvas = (
           canvasContainer.onmousedown = onMouseDown;
           canvasContainer.onmousemove = onMouseMove;
           canvasContainer.onmouseup = onMouseUp;
+
+          window.addEventListener('message', event => {
+            message = event.data;
+            showImg(scale);
+          });
         </script>
       </body>
     </html>`;
