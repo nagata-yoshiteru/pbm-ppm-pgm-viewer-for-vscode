@@ -11,7 +11,9 @@ Built by [Yoshietru Nagata](https://github.com/nagata-yoshiteru) 🇯🇵 , [Ben
 - Zoom and Scroll
     - Use the zoom panel to zoom in, out or reset your zoom level
     - Use your scroll wheel or drag your mouse to pan around once zoomed in
+    - Use `Ctrl` key + mouse scroll wheel to zoom in and out
 - Configure the color for your zoom panel
+- Auto refresh viewer when a image file has changes
 
 ## Extension Settings
 
@@ -22,6 +24,10 @@ Built by [Yoshietru Nagata](https://github.com/nagata-yoshiteru) 🇯🇵 , [Ben
  - None that we know of, but feel free to leave us a github issue :)
 
 ## Release Notes
+
+## 0.0.8
+
+- Auto refresh viewer when a image file has changes
 
 ## 0.0.7
 

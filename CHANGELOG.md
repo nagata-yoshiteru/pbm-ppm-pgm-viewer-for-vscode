@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.0.8
+
+- Auto refresh viewer when a image file has changes
+
 ## 0.0.7
 
 - Zoom in and out with `Ctrl` key + mouse scroll
