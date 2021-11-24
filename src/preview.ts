@@ -67,7 +67,7 @@ export default class ImagePreviewProvider
     return document;
   }
 
-  private _updateWebView(
+  private _createWebView(
     newDocument: ImagePreviewDocument,
     webviewPanel: vscode.WebviewPanel
   ) {
@@ -82,6 +82,16 @@ export default class ImagePreviewProvider
     }
   }
 
+  private _updateWebView(
+    newDocument: ImagePreviewDocument,
+    webviewPanel: vscode.WebviewPanel
+  ) {
+    const { status } = newDocument.imageData;
+    if (status === parse.PARSE_STATUS.SUCCESS) {
+      webviewPanel.webview.postMessage(newDocument.imageData);
+    }
+  }
+
   async resolveCustomEditor(
     document: ImagePreviewDocument,
     webviewPanel: vscode.WebviewPanel,
@@ -90,15 +100,12 @@ export default class ImagePreviewProvider
     webviewPanel.webview.options = {
       enableScripts: true,
     };
-    this._updateWebView(document, webviewPanel);
+    this._createWebView(document, webviewPanel);
 
     const relativePath = vscode.workspace.asRelativePath(document.uri);
-    console.log("Opening File: " + relativePath);
     let watcher = vscode.workspace.createFileSystemWatcher("**/" + relativePath);  // possible to match another image
     const changeFileSubscription = watcher.onDidChange(async (e) => {
-      console.log("Event: " + vscode.workspace.asRelativePath(e));
       if (document.uri.path === e.path) {  // filter an event
-        console.log("Changed: " + vscode.workspace.asRelativePath(e));
         const newDocument = await ImagePreviewDocument.create(
           vscode.Uri.parse(e.path)
         );
