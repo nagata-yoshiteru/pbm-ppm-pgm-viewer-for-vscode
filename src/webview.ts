@@ -25,7 +25,7 @@ const generateHTMLCanvas = (
                   text-align: center;
                   cursor: pointer;
                   user-select: none;`,
-    resetButton: `background-color: ${validateColor(btnColor) ? btnColor : "#dd4535"};
+    wideButton: `background-color: ${validateColor(btnColor) ? btnColor : "#dd4535"};
                   text-align: center;
                   margin-bottom: 15px;
                   cursor: pointer;
@@ -49,7 +49,8 @@ const generateHTMLCanvas = (
             <div onclick="scale = scale * 2; showImg(scale);" style="${styles.sizingButton}">+</div>
             <div onclick="scale = scale / 2; showImg(scale);" style="${styles.sizingButton}">-</div>
           </div>
-          <div onclick="scale = 1; showImg(scale);" style="${styles.resetButton}">Reset</div>
+          <div onclick="scale = 1; showImg(scale);" style="${styles.wideButton}">Reset</div>
+          <div onclick="saveImg();" style="${styles.wideButton}">Save Image</div>
         </div>
         <div id="canvas-container" style="overflow: auto">
           <canvas width="${width}" height="${height}" id="canvas-area" style="${styles.canvas}"></canvas>
@@ -94,6 +95,13 @@ const generateHTMLCanvas = (
           }
 
           window.addEventListener('wheel', zoom);
+
+          function saveImg() {
+            const saveLink = document.createElement("a");
+            saveLink.href = canvas.toDataURL();
+            saveLink.download = "image.png";
+            saveLink.click();
+          }
 
           const lastPos = { x: 0, y: 0 };
           let isDragging = false;
