@@ -1,13 +1,16 @@
 import * as vscode from "vscode";
 import validateColor from "validate-color";
 import { imagePreviewProviderViewType } from "./const";
+import * as path from 'path';
 
 const generateHTMLCanvas = (
   data: string,
   width: number,
   height: number,
-  imgType: string
+  imgType: string,
+  webviewTitle: string
 ): string => {
+  const saveFilename = `${path.basename(webviewTitle, path.extname(webviewTitle))}.png`;
   const bgColor = String(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('panelBackgroundColor'));
   const btnColor = String(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('panelButtonColor'));
   const styles = {
@@ -100,7 +103,7 @@ const generateHTMLCanvas = (
             const saveLink = document.createElement("a");
             showImg(1); // scale image to 100% 
             saveLink.href = canvas.toDataURL();
-            saveLink.download = "image.png";
+            saveLink.download = '${saveFilename}';
             saveLink.click();
             showImg(scale); // restore zoom level
           }

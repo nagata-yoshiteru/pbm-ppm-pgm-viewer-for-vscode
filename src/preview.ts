@@ -77,7 +77,8 @@ export default class ImagePreviewProvider
         JSON.stringify(newDocument.imageData),
         width || 0,
         height || 0,
-        imgType || ""
+        imgType || "",
+        webviewPanel.title
       );
     }
   }
