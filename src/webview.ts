@@ -67,11 +67,12 @@ const generateHTMLCanvas = (
           const widthDisplay = document.getElementById('width-display');
           const heightDisplay = document.getElementById('height-display');
           const scaleDisplay = document.getElementById('scale-display');
-          function showImg(scale) {
-            const { colorData, width, height, imgType } = message;
-            let ctx = canvas.getContext('2d');
-            canvas.width = width * scale;
-            canvas.height = height * scale;
+
+          function scaleCanvas(targetCanvas, scale) {
+            const { colorData, width, height } = message;
+            let ctx = targetCanvas.getContext('2d');
+            targetCanvas.width = width * scale;
+            targetCanvas.height = height * scale;
             for (let x = 0; x < width; x++){
               for (let y = 0; y < height; y++){
                 let color = colorData[(y * width) + x];
@@ -79,6 +80,11 @@ const generateHTMLCanvas = (
                 ctx.fillRect(x * scale, y * scale, scale, scale);
               }
             }
+          }
+
+          function showImg(scale) {
+            const { width, height, imgType } = message;
+            scaleCanvas(canvas, scale);
             typeDisplay.innerHTML = "Type: " + imgType;
             widthDisplay.innerHTML = "Width: " + String(width) + "px";
             heightDisplay.innerHTML = "Height: " + String(height) + "px";
@@ -101,11 +107,11 @@ const generateHTMLCanvas = (
 
           function saveImg() {
             const saveLink = document.createElement("a");
-            showImg(1); // scale image to 100% 
-            saveLink.href = canvas.toDataURL();
+            const saveCanvas = canvas.cloneNode(true);
+            scaleCanvas(saveCanvas, 1);
+            saveLink.href = saveCanvas.toDataURL();
             saveLink.download = '${saveFilename}';
             saveLink.click();
-            showImg(scale); // restore zoom level
           }
 
           const lastPos = { x: 0, y: 0 };
