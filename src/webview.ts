@@ -98,9 +98,11 @@ const generateHTMLCanvas = (
 
           function saveImg() {
             const saveLink = document.createElement("a");
+            showImg(1); // scale image to 100% 
             saveLink.href = canvas.toDataURL();
             saveLink.download = "image.png";
             saveLink.click();
+            showImg(scale); // restore zoom level
           }
 
           const lastPos = { x: 0, y: 0 };
