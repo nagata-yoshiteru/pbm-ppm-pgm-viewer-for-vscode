@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import validateColor from "validate-color";
 import { imagePreviewProviderViewType } from "./const";
-import * as path from 'path';
+import * as path from "path";
 
 const generateHTMLCanvas = (
   data: string,
