@@ -50,7 +50,7 @@ const generateHTMLCanvas = (
             <div onclick="scale = scale / 2; showImg(scale);" style="${styles.sizingButton}">-</div>
           </div>
           <div onclick="scale = 1; showImg(scale);" style="${styles.wideButton}">Reset</div>
-          <div onclick="saveImg();" style="${styles.wideButton}">Save Image</div>
+          <div onclick="saveImg();" style="${styles.wideButton}">Save as PNG</div>
         </div>
         <div id="canvas-container" style="overflow: auto">
           <canvas width="${width}" height="${height}" id="canvas-area" style="${styles.canvas}"></canvas>
