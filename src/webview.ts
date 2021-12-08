@@ -1,13 +1,16 @@
 import * as vscode from "vscode";
 import validateColor from "validate-color";
 import { imagePreviewProviderViewType } from "./const";
+import * as path from "path";
 
 const generateHTMLCanvas = (
   data: string,
   width: number,
   height: number,
-  imgType: string
+  imgType: string,
+  webviewTitle: string
 ): string => {
+  const saveFilename = `${path.basename(webviewTitle, path.extname(webviewTitle))}.png`;
   const bgColor = String(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('panelBackgroundColor'));
   const btnColor = String(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('panelButtonColor'));
   const styles = {
@@ -25,7 +28,7 @@ const generateHTMLCanvas = (
                   text-align: center;
                   cursor: pointer;
                   user-select: none;`,
-    resetButton: `background-color: ${validateColor(btnColor) ? btnColor : "#dd4535"};
+    wideButton: `background-color: ${validateColor(btnColor) ? btnColor : "#dd4535"};
                   text-align: center;
                   margin-bottom: 15px;
                   cursor: pointer;
@@ -49,7 +52,8 @@ const generateHTMLCanvas = (
             <div onclick="scale = scale * 2; showImg(scale);" style="${styles.sizingButton}">+</div>
             <div onclick="scale = scale / 2; showImg(scale);" style="${styles.sizingButton}">-</div>
           </div>
-          <div onclick="scale = 1; showImg(scale);" style="${styles.resetButton}">Reset</div>
+          <div onclick="scale = 1; showImg(scale);" style="${styles.wideButton}">Reset</div>
+          <div onclick="saveImg();" style="${styles.wideButton}">Save as PNG</div>
         </div>
         <div id="canvas-container" style="overflow: auto">
           <canvas width="${width}" height="${height}" id="canvas-area" style="${styles.canvas}"></canvas>
@@ -63,11 +67,12 @@ const generateHTMLCanvas = (
           const widthDisplay = document.getElementById('width-display');
           const heightDisplay = document.getElementById('height-display');
           const scaleDisplay = document.getElementById('scale-display');
-          function showImg(scale) {
-            const { colorData, width, height, imgType } = message;
-            let ctx = canvas.getContext('2d');
-            canvas.width = width * scale;
-            canvas.height = height * scale;
+
+          function scaleCanvas(targetCanvas, scale) {
+            const { colorData, width, height } = message;
+            let ctx = targetCanvas.getContext('2d');
+            targetCanvas.width = width * scale;
+            targetCanvas.height = height * scale;
             for (let x = 0; x < width; x++){
               for (let y = 0; y < height; y++){
                 let color = colorData[(y * width) + x];
@@ -75,6 +80,11 @@ const generateHTMLCanvas = (
                 ctx.fillRect(x * scale, y * scale, scale, scale);
               }
             }
+          }
+
+          function showImg(scale) {
+            const { width, height, imgType } = message;
+            scaleCanvas(canvas, scale);
             typeDisplay.innerHTML = "Type: " + imgType;
             widthDisplay.innerHTML = "Width: " + String(width) + "px";
             heightDisplay.innerHTML = "Height: " + String(height) + "px";
@@ -94,6 +104,15 @@ const generateHTMLCanvas = (
           }
 
           window.addEventListener('wheel', zoom);
+
+          function saveImg() {
+            const saveLink = document.createElement("a");
+            const saveCanvas = canvas.cloneNode(true);
+            scaleCanvas(saveCanvas, 1);
+            saveLink.href = saveCanvas.toDataURL();
+            saveLink.download = '${saveFilename}';
+            saveLink.click();
+          }
 
           const lastPos = { x: 0, y: 0 };
           let isDragging = false;
