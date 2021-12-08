@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.0.9
+
+- Add save as PNG feature
+
 ## 0.0.8
 
 - Auto refresh viewer when a image file has changes

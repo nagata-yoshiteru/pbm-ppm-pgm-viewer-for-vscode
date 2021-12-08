@@ -13,7 +13,8 @@ Built by [Yoshietru Nagata](https://github.com/nagata-yoshiteru) 🇯🇵 , [Ben
     - Use your scroll wheel or drag your mouse to pan around once zoomed in
     - Use `Ctrl` key + mouse scroll wheel to zoom in and out
 - Configure the color for your zoom panel
-- Auto refresh viewer when a image file has changes
+- Auto refresh viewer when an image file has changes
+- Save an image as PNG format
 
 ## Extension Settings
 
@@ -24,6 +25,10 @@ Built by [Yoshietru Nagata](https://github.com/nagata-yoshiteru) 🇯🇵 , [Ben
  - None that we know of, but feel free to leave us a github issue :)
 
 ## Release Notes
+
+## 0.0.9
+
+- Add save as PNG feature
 
 ## 0.0.8
 
