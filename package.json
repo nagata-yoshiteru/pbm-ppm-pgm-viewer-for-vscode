@@ -48,6 +48,12 @@
 					"scope": "application",
 					"default": "#dd4535",
 					"description": "Button color in the zoom panel."
+				},
+				"ppm-pgm-viewer-for-vscode.imagepreview.uiPosition": {
+					"type": "string",
+					"scope": "window",
+					"default": "left",
+					"description": "Panel UI position. (\"left\" or \"right\")"
 				}
 			}
 		}
