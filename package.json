@@ -48,6 +48,12 @@
 					"scope": "application",
 					"default": "#dd4535",
 					"description": "Button color in the zoom panel."
+				},
+				"ppm-pgm-viewer-for-vscode.imagepreview.defaultPreviewScale": {
+					"type": "number",
+					"scope": "window",
+					"default": 1.0,
+					"description": "Default zoom level for image preview."
 				}
 			}
 		}

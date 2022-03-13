@@ -13,6 +13,7 @@ const generateHTMLCanvas = (
   const saveFilename = `${path.basename(webviewTitle, path.extname(webviewTitle))}.png`;
   const bgColor = String(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('panelBackgroundColor'));
   const btnColor = String(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('panelButtonColor'));
+  const defaultScale = String(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('defaultPreviewScale'));
   const styles = {
     canvas: `padding: 0;
             margin: auto;
@@ -59,7 +60,7 @@ const generateHTMLCanvas = (
           <canvas width="${width}" height="${height}" id="canvas-area" style="${styles.canvas}"></canvas>
         </div>
         <script>
-          let scale = 1;
+          let scale = ${defaultScale};
           const jsonStr = '${data}';
           let message = JSON.parse(jsonStr);
           const canvas = document.getElementById('canvas-area');
