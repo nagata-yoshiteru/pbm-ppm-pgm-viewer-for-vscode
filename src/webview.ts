@@ -14,6 +14,7 @@ const generateHTMLCanvas = (
   const bgColor = String(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('panelBackgroundColor'));
   const btnColor = String(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('panelButtonColor'));
   const defaultScale = String(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('defaultPreviewScale'));
+  const uiPosition = String(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('uiPosition'));
   const styles = {
     canvas: `padding: 0;
             margin: auto;
@@ -22,7 +23,8 @@ const generateHTMLCanvas = (
           background-color: ${validateColor(bgColor) ? bgColor : "#ec5340"};
           padding: 0px 15px;
           margin: 15px 15px;
-          width: 100px;`,
+          width: 100px;
+          ${uiPosition}: 20px;`,
     sizingButton: `width: 48%;
                   background-color: ${validateColor(btnColor) ? btnColor : "#dd4535"};
                   display: inline-block;

@@ -54,6 +54,17 @@
 					"scope": "window",
 					"default": 1.0,
 					"description": "Default zoom level for image preview."
+        },
+				"ppm-pgm-viewer-for-vscode.imagepreview.uiPosition": {
+					"type": "string",
+					"scope": "window",
+					"default": "left",
+					"description": "Panel UI position. (left or right)",
+					"enum": ["left", "right"],
+					"enumDescriptions": [
+						"Show UI panel in the left side of the preview area",
+						"Show UI panel in the right side of the preview area"
+					]
 				}
 			}
 		}
