@@ -54,7 +54,13 @@
 					"scope": "window",
 					"default": 1.0,
 					"description": "Default zoom level for image preview."
-        },
+        		},
+				"ppm-pgm-viewer-for-vscode.imagepreview.autoScalingMode": {
+					"type": "boolean",
+					"scope": "window",
+					"default": false,
+					"description": "Use Auto Scaling Mode."
+				},
 				"ppm-pgm-viewer-for-vscode.imagepreview.uiPosition": {
 					"type": "string",
 					"scope": "window",
