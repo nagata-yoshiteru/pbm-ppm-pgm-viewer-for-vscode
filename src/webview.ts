@@ -13,6 +13,8 @@ const generateHTMLCanvas = (
   const saveFilename = `${path.basename(webviewTitle, path.extname(webviewTitle))}.png`;
   const bgColor = String(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('panelBackgroundColor'));
   const btnColor = String(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('panelButtonColor'));
+  const defaultScale = String(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('defaultPreviewScale'));
+  const autoScalingMode = String(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('autoScalingMode'));
   const uiPosition = String(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('uiPosition'));
   const styles = {
     canvas: `padding: 0;
@@ -61,7 +63,7 @@ const generateHTMLCanvas = (
           <canvas width="${width}" height="${height}" id="canvas-area" style="${styles.canvas}"></canvas>
         </div>
         <script>
-          let scale = 1;
+          let scale = ${defaultScale};
           const jsonStr = '${data}';
           let message = JSON.parse(jsonStr);
           const canvas = document.getElementById('canvas-area');
@@ -69,6 +71,12 @@ const generateHTMLCanvas = (
           const widthDisplay = document.getElementById('width-display');
           const heightDisplay = document.getElementById('height-display');
           const scaleDisplay = document.getElementById('scale-display');
+          if(${autoScalingMode}){
+            const html = document.getElementsByTagName("html")[0];
+            const alpha = 0.05;
+            const scaleAuto = Math.min(html.clientWidth/${width}, html.clientHeight/${height}) * (1 - alpha);
+            scale = 2 ** Math.floor(Math.log2(scaleAuto));
+          }
 
           function scaleCanvas(targetCanvas, scale) {
             const { colorData, width, height } = message;
