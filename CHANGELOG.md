@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.0.10
+
+- Add Default zoom level setting
+- Add Auto Scaling Mode feature
+- Add Panel UI position setting
+
 ## 0.0.9
 
 - Add save as PNG feature

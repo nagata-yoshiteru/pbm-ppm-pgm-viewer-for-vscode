@@ -12,7 +12,9 @@ Built by [Yoshietru Nagata](https://github.com/nagata-yoshiteru) 🇯🇵 , [Ben
     - Use the zoom panel to zoom in, out or reset your zoom level
     - Use your scroll wheel or drag your mouse to pan around once zoomed in
     - Use `Ctrl` key + mouse scroll wheel to zoom in and out
-- Configure the color for your zoom panel
+    - Use Default Zoom Level setting to specify your zoom level when opening an image
+    - Use Auto Scaling Mode to fit an image to the window size without aliasing
+- Configure the color and the position for your zoom panel
 - Auto refresh viewer when an image file has changes
 - Save an image as PNG format
 
@@ -28,6 +30,12 @@ Built by [Yoshietru Nagata](https://github.com/nagata-yoshiteru) 🇯🇵 , [Ben
  - None that we know of, but feel free to leave us a github issue :)
 
 ## Release Notes
+
+## 0.0.10
+
+- Add Default zoom level setting
+- Add Auto Scaling Mode feature
+- Add Panel UI position setting
 
 ## 0.0.9
 
