@@ -204,7 +204,7 @@ const parseByteFormat = (byteData: Uint8Array) => {
         pixelIndex += 1;
         index += 1;
       }
-      break;6
+      break;
     }
     case "P6": {
       while (pixelIndex < totalPixels) {
