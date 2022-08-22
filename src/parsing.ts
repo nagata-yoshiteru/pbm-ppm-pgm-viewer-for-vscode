@@ -19,7 +19,7 @@ const isWhiteSpace = (byteData: Uint8Array, i: number): boolean => {
   );
 };
 
-const getNextByte = (data: Uint8Array, index: number) => {
+const getNextByte = (data: Uint8Array, index: number, isSingleBit: boolean) => {
   // Once this function returns, its should return:
   // 1) The next interpreted and casted byte
   // 2) The index of the byte immediately following the
@@ -49,6 +49,10 @@ const getNextByte = (data: Uint8Array, index: number) => {
       ) {
         byteStr += String.fromCharCode(data[i]);
         i++;
+        
+        if (isSingleBit) {
+          break;
+        }
       }
       break;
     }
@@ -116,12 +120,29 @@ const parseByteFormat = (byteData: Uint8Array) => {
 
   let colorData: { r: number; g: number; b: number }[] = [];
   switch (imgType) {
+    case "P1": {
+      let index = i;
+      while (index < byteData.length - 1) {
+        const pixel: { r: number; g: number; b: number } = { r: 0, g: 0, b: 0 };
+
+        let data = getNextByte(byteData, index, true);
+        const colorValue = (1 - data[0]) * 255;
+
+        pixel["r"] = Math.floor(colorValue);
+        pixel["g"] = Math.floor(colorValue);
+        pixel["b"] = Math.floor(colorValue);
+        index = data[1];
+
+        colorData.push(pixel);
+      }
+      break;
+    }
     case "P2": {
       // The rest of byteData (starting from byteData[i]) should be the each pixel's data formatted in P2.
       let index = i;
       while (index < byteData.length - 1) {
         const pixel: { r: number; g: number; b: number } = { r: 0, g: 0, b: 0 };
-        const data = getNextByte(byteData, index);
+        const data = getNextByte(byteData, index, false);
         const value = Math.floor((data[0] / mc) * 255);
         pixel["r"] = value;
         pixel["g"] = value;
@@ -138,15 +159,15 @@ const parseByteFormat = (byteData: Uint8Array) => {
       while (index < byteData.length - 1) {
         const pixel: { r: number; g: number; b: number } = { r: 0, g: 0, b: 0 };
 
-        let data = getNextByte(byteData, index);
+        let data = getNextByte(byteData, index, false);
         pixel["r"] = Math.floor((data[0] / mc) * 255);
         index = data[1];
 
-        data = getNextByte(byteData, index);
+        data = getNextByte(byteData, index, false);
         pixel["g"] = Math.floor((data[0] / mc) * 255);
         index = data[1];
 
-        data = getNextByte(byteData, index);
+        data = getNextByte(byteData, index, false);
         pixel["b"] = Math.floor((data[0] / mc) * 255);
         index = data[1];
 
@@ -154,7 +175,10 @@ const parseByteFormat = (byteData: Uint8Array) => {
       }
       break;
     }
-    case "P5":
+    case "P4": {
+
+    }
+    case "P5": {
       for (let index = i; index < byteData.byteLength; index++) {
         colorData.push({
           r: byteData[index],
@@ -163,7 +187,8 @@ const parseByteFormat = (byteData: Uint8Array) => {
         });
       }
       break;
-    case "P6":
+    }
+    case "P6": {
       for (let index = i; index < byteData.byteLength; index = index + 3) {
         colorData.push({
           r: byteData[index],
@@ -172,6 +197,7 @@ const parseByteFormat = (byteData: Uint8Array) => {
         });
       }
       break;
+    }
     default:
       return { status: PARSE_STATUS.FAILURE };
   }
