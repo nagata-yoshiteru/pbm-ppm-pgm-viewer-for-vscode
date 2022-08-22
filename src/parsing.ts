@@ -176,6 +176,24 @@ const parseByteFormat = (byteData: Uint8Array) => {
       }
       break;
     }
+    case "P4": {
+      const bytesPerRow = Math.ceil(width / 8);
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          const byteOffset = (y * bytesPerRow) + Math.floor(x / 8);
+          const bitOffset = x % 8;
+          
+          const byte = byteData[index + byteOffset];
+          const colorValue = (1 - ((byte & (0x1 << (7 - bitOffset))) >> (7 - bitOffset))) * 255;
+          colorData.push({
+            r: colorValue,
+            g: colorValue,
+            b: colorValue,
+          });
+        }
+      }
+      break;
+    }
     case "P5": {
       while (pixelIndex < totalPixels) {
         colorData.push({
@@ -184,9 +202,9 @@ const parseByteFormat = (byteData: Uint8Array) => {
           b: byteData[index],
         });
         pixelIndex += 1;
-        i += 3;
+        index += 1;
       }
-      break;
+      break;6
     }
     case "P6": {
       while (pixelIndex < totalPixels) {
@@ -196,7 +214,7 @@ const parseByteFormat = (byteData: Uint8Array) => {
           b: byteData[index + 2],
         });
         pixelIndex += 1;
-        i += 3;
+        index += 3;
       }
       break;
     }
