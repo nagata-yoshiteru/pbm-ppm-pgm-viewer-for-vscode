@@ -1,7 +1,7 @@
 {
 	"name": "ppm-pgm-viewer-for-vscode",
-	"displayName": "PPM/PGM Viewer for Visual Studio Code",
-	"description": "PPM/PGM Viewer for Visual Studio Code",
+	"displayName": "PBM/PPM/PGM Viewer for Visual Studio Code",
+	"description": "PBM/PPM/PGM Viewer for Visual Studio Code",
 	"publisher": "ngtystr",
 	"repository": {
 		"type": "git",
@@ -38,7 +38,7 @@
 			}
 		],
 		"configuration": {
-			"title": "PPM/PGM Viewer Image Preview",
+			"title": "PBM/PPM/PGM Viewer Image Preview",
 			"properties": {
 				"ppm-pgm-viewer-for-vscode.imagepreview.panelBackgroundColor": {
 					"type": "string",
