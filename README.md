@@ -32,7 +32,7 @@ Built by [Yoshietru Nagata](https://github.com/nagata-yoshiteru) 🇯🇵 , [Ben
 
 ## Release Notes
 
-## 0.0.11
+## 1.0.0
 
 - Add support for P1/P4 .pbm files
 

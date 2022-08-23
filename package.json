@@ -5,9 +5,9 @@
 	"publisher": "ngtystr",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/nagata-yoshiteru/ppm-pgm-viewer-for-vscode"
+		"url": "https://github.com/nagata-yoshiteru/pbm-ppm-pgm-viewer-for-vscode"
 	},
-	"version": "0.0.10",
+	"version": "1.0.0",
 	"icon": "images/icon.png",
 	"engines": {
 		"vscode": "^1.55.0"
