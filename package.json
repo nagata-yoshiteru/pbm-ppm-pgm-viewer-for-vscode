@@ -1,13 +1,13 @@
 {
 	"name": "ppm-pgm-viewer-for-vscode",
-	"displayName": "PPM/PGM Viewer for Visual Studio Code",
-	"description": "PPM/PGM Viewer for Visual Studio Code",
+	"displayName": "PBM/PPM/PGM Viewer for Visual Studio Code",
+	"description": "PBM/PPM/PGM Viewer for Visual Studio Code",
 	"publisher": "ngtystr",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/nagata-yoshiteru/ppm-pgm-viewer-for-vscode"
+		"url": "https://github.com/nagata-yoshiteru/pbm-ppm-pgm-viewer-for-vscode"
 	},
-	"version": "0.0.10",
+	"version": "1.0.0",
 	"icon": "images/icon.png",
 	"engines": {
 		"vscode": "^1.55.0"
@@ -30,12 +30,15 @@
 					},
 					{
 						"filenamePattern": "*.pgm"
+					},
+					{
+						"filenamePattern": "*.pbm"
 					}
 				]
 			}
 		],
 		"configuration": {
-			"title": "PPM/PGM Viewer Image Preview",
+			"title": "PBM/PPM/PGM Viewer Image Preview",
 			"properties": {
 				"ppm-pgm-viewer-for-vscode.imagepreview.panelBackgroundColor": {
 					"type": "string",

@@ -1,19 +1,19 @@
-# [PPM/PGM Viewer for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ngtystr.ppm-pgm-viewer-for-vscode)
+# [PBM/PPM/PGM Viewer for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ngtystr.ppm-pgm-viewer-for-vscode)
 
 Built by [Yoshietru Nagata](https://github.com/nagata-yoshiteru) 🇯🇵 , [Ben Weisz](https://github.com/BenWeisz) 🇨🇦 and [Kensuke Suzuki](https://szk18.github.io/) 🇯🇵
 
-
 ## Features
 
-- View .ppm/.pgm images in the supported formats:
-    - PPM (P2, P3)
-    - PGM (P5, P6)
+- View .pbm/.ppm/.pgm images in the supported formats:
+  - PBM (P1, P4)
+  - PPM (P2, P3)
+  - PGM (P5, P6)
 - Zoom and Scroll
-    - Use the zoom panel to zoom in, out or reset your zoom level
-    - Use your scroll wheel or drag your mouse to pan around once zoomed in
-    - Use `Ctrl` key + mouse scroll wheel to zoom in and out
-    - Use Default Zoom Level setting to specify your zoom level when opening an image
-    - Use Auto Scaling Mode to fit an image to the window size without aliasing
+  - Use the zoom panel to zoom in, out or reset your zoom level
+  - Use your scroll wheel or drag your mouse to pan around once zoomed in
+  - Use `Ctrl` key + mouse scroll wheel to zoom in and out
+  - Use Default Zoom Level setting to specify your zoom level when opening an image
+  - Use Auto Scaling Mode to fit an image to the window size without aliasing
 - Configure the color and the position for your zoom panel
 - Auto refresh viewer when an image file has changes
 - Save an image as PNG format
@@ -27,9 +27,14 @@ Built by [Yoshietru Nagata](https://github.com/nagata-yoshiteru) 🇯🇵 , [Ben
 - `ppm-pgm-viewer-for-vscode.imagepreview.uiPosition` : Panel UI position. (default is `left`)
 
 ## Known Issues
- - None that we know of, but feel free to leave us a github issue :)
+
+- None that we know of, but feel free to leave us a github issue :)
 
 ## Release Notes
+
+## 1.0.0
+
+- Add support for P1/P4 .pbm files
 
 ## 0.0.10
 
