@@ -71,10 +71,11 @@ export default class ImagePreviewProvider
     newDocument: ImagePreviewDocument,
     webviewPanel: vscode.WebviewPanel
   ) {
-    const { status, width, height, imgType } = newDocument.imageData;
+    const data = newDocument.imageData;
+    const { status, width, height, imgType } = data;
     if (status === parse.PARSE_STATUS.SUCCESS) {
       webviewPanel.webview.html = generateHTMLCanvas(
-        JSON.stringify(newDocument.imageData),
+        JSON.stringify(data),
         width || 0,
         height || 0,
         imgType || "",
