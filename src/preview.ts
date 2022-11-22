@@ -88,9 +88,9 @@ export default class ImagePreviewProvider
     newDocument: ImagePreviewDocument,
     webviewPanel: vscode.WebviewPanel
   ) {
-    const { status } = newDocument.imageData;
-    if (status === parse.PARSE_STATUS.SUCCESS) {
-      webviewPanel.webview.postMessage(newDocument.imageData);
+    const data = newDocument.imageData;
+    if (data.status === parse.PARSE_STATUS.SUCCESS) {
+      webviewPanel.webview.postMessage(data);
     }
   }
 
