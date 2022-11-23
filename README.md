@@ -32,6 +32,11 @@ Built by [Yoshietru Nagata](https://github.com/nagata-yoshiteru) 🇯🇵 , [Ben
 
 ## Release Notes
 
+## 1.0.1
+
+- Performance Optimization
+- Security fix
+
 ## 1.0.0
 
 - Add support for P1/P4 .pbm files
