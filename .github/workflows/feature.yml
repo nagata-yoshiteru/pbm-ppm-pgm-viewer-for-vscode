@@ -1,4 +1,4 @@
-name: master
+name: feature
 
 env:
   NODE_VERSION: 16.x
@@ -6,7 +6,7 @@ env:
 on:
   push:
     branches:
-    - master
+    - feature/*
 
 jobs:
   build:
