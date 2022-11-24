@@ -32,6 +32,11 @@ Built by [Yoshietru Nagata](https://github.com/nagata-yoshiteru) 🇯🇵 , [Ben
 
 ## Release Notes
 
+## 1.0.2
+
+- Open VSX Support
+- Security fix
+
 ## 1.0.1
 
 - Performance Optimization

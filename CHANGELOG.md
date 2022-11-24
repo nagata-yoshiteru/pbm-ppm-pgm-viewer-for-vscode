@@ -1,5 +1,10 @@
 # Change Log
 
+## 1.0.2
+
+- Open VSX Support
+- Security fix
+
 ## 1.0.1
 
 - Performance Optimization
