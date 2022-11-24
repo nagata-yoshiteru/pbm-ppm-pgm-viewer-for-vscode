@@ -55,9 +55,9 @@
 				"ppm-pgm-viewer-for-vscode.imagepreview.defaultPreviewScale": {
 					"type": "number",
 					"scope": "window",
-					"default": 1.0,
+					"default": 1,
 					"description": "Default zoom level for image preview."
-        		},
+				},
 				"ppm-pgm-viewer-for-vscode.imagepreview.autoScalingMode": {
 					"type": "boolean",
 					"scope": "window",
@@ -69,7 +69,10 @@
 					"scope": "window",
 					"default": "left",
 					"description": "Panel UI position. (left or right)",
-					"enum": ["left", "right"],
+					"enum": [
+						"left",
+						"right"
+					],
 					"enumDescriptions": [
 						"Show UI panel in the left side of the preview area",
 						"Show UI panel in the right side of the preview area"
@@ -109,6 +112,7 @@
 		"webpack-cli": "^4.4.0"
 	},
 	"dependencies": {
+		"ovsx": "^0.5.2",
 		"validate-color": "^2.1.1"
 	}
 }
