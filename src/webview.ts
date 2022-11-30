@@ -16,7 +16,7 @@ const generateHTMLCanvas = (
   const defaultScale = String(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('defaultPreviewScale'));
   const autoScalingMode = String(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('autoScalingMode'));
   const uiPosition = String(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('uiPosition'));
-  const hidePanel = String(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('hidePanel'));
+  const hidePanel = Boolean(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('hidePanel'));
   const styles = {
     canvas: `padding: 0;
             margin: auto;
