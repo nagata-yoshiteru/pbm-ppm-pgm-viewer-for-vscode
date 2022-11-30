@@ -16,6 +16,7 @@ const generateHTMLCanvas = (
   const defaultScale = String(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('defaultPreviewScale'));
   const autoScalingMode = String(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('autoScalingMode'));
   const uiPosition = String(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('uiPosition'));
+  const hidePanel = String(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('hidePanel'));
   const styles = {
     canvas: `padding: 0;
             margin: auto;
@@ -25,7 +26,8 @@ const generateHTMLCanvas = (
           padding: 0px 15px;
           margin: 15px 15px;
           width: 100px;
-          ${uiPosition}: 20px;`,
+          ${uiPosition}: 20px;
+          ${hidePanel ? "display: none" : ""}`,
     sizingButton: `width: 48%;
                   background-color: ${validateColor(btnColor) ? btnColor : "#dd4535"};
                   display: inline-block;
