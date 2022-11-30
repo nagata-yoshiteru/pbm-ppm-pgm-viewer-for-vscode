@@ -107,6 +107,7 @@ const generateHTMLCanvas = (
           function zoom(e) {
             e.preventDefault();
             if(!e.ctrlKey) return;
+            if(${hidePanel}) return;
             if(e.deltaY < 0) {
               scale = scale * 2;
             } else {
