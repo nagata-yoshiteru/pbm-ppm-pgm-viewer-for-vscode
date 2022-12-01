@@ -25,6 +25,7 @@ Built by [Yoshietru Nagata](https://github.com/nagata-yoshiteru) 🇯🇵 , [Ben
 - `ppm-pgm-viewer-for-vscode.imagepreview.defaultPreviewScale` : Default zoom level for image preview (default is 1.0)
 - `ppm-pgm-viewer-for-vscode.imagepreview.autoScalingMode` : Whether to use Auto Scaling Mode (default is false)
 - `ppm-pgm-viewer-for-vscode.imagepreview.uiPosition` : Panel UI position. (default is `left`)
+- `ppm-pgm-viewer-for-vscode.imagepreview.hidePanel` : Hide the panel. (default is `false`)
 
 ## Known Issues
 

@@ -77,6 +77,12 @@
 						"Show UI panel in the left side of the preview area",
 						"Show UI panel in the right side of the preview area"
 					]
+				},
+				"ppm-pgm-viewer-for-vscode.imagepreview.hidePanel": {
+					"type": "boolean",
+					"scope": "window",
+					"default": false,
+					"description": "Hide the panel."
 				}
 			}
 		}
