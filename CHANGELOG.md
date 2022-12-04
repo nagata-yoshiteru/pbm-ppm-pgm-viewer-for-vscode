@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.1.0
+
+- Add hide panel feature
+
 ## 1.0.2
 
 - Open VSX Support
