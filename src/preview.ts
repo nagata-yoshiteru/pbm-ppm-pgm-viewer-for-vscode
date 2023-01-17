@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import * as path from "path";
 import generateHTMLCanvas from "./webview";
 import parse from "./parsing";
 import { imagePreviewProviderViewType } from "./const";
@@ -104,19 +105,32 @@ export default class ImagePreviewProvider
     };
     this._createWebView(document, webviewPanel);
 
-    const relativePath = vscode.workspace.asRelativePath(document.uri);
-    let watcher = vscode.workspace.createFileSystemWatcher("**/" + relativePath);  // possible to match another image
-    const changeFileSubscription = watcher.onDidChange(async (e) => {
+    const watcherAction = async (e) => {
       if (document.uri.path === e.path) {  // filter an event
         const newDocument = await ImagePreviewDocument.create(
           vscode.Uri.parse(e.path)
         );
         this._updateWebView(newDocument, webviewPanel);
       }
-    });
+    };
+
+    const relativePath = vscode.workspace.asRelativePath(document.uri);
+    const fileName = path.parse(relativePath).base;
+    const dirName = path.parse(relativePath).dir;
+    const benUri = vscode.Uri.file(dirName);
+
+    // This watcher is for files outside the workspace
+    let globalWatcher = vscode.workspace.createFileSystemWatcher(new vscode.RelativePattern(benUri, fileName));  // possible to match another image
+    const globalChangeFileSubscription = globalWatcher.onDidChange(watcherAction);
+
+    // This watcher is for the files in the workspace
+    let localWatcher = vscode.workspace.createFileSystemWatcher("**/" + relativePath);
+    const localChangeFileSubscription = localWatcher.onDidChange(watcherAction);
+
 
     webviewPanel.onDidDispose(() => {
-      changeFileSubscription.dispose();
+      globalChangeFileSubscription.dispose();
+      localChangeFileSubscription.dispose();
     });
   }
 }
