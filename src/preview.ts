@@ -105,8 +105,9 @@ export default class ImagePreviewProvider
     };
     this._createWebView(document, webviewPanel);
 
-    const watcherAction = async (e) => {
-      if (document.uri.path === e.path) {  // filter an event
+    const watcherAction = async (e: vscode.Uri) => {
+      if (document.uri.path === e.path) {
+        // filter an event
         const newDocument = await ImagePreviewDocument.create(
           vscode.Uri.parse(e.path)
         );
@@ -120,13 +121,17 @@ export default class ImagePreviewProvider
     const benUri = vscode.Uri.file(dirName);
 
     // This watcher is for files outside the workspace
-    let globalWatcher = vscode.workspace.createFileSystemWatcher(new vscode.RelativePattern(benUri, fileName));  // possible to match another image
-    const globalChangeFileSubscription = globalWatcher.onDidChange(watcherAction);
+    let globalWatcher = vscode.workspace.createFileSystemWatcher(
+      new vscode.RelativePattern(benUri, fileName)
+    ); // possible to match another image
+    const globalChangeFileSubscription =
+      globalWatcher.onDidChange(watcherAction);
 
     // This watcher is for the files in the workspace
-    let localWatcher = vscode.workspace.createFileSystemWatcher("**/" + relativePath);
+    let localWatcher = vscode.workspace.createFileSystemWatcher(
+      "**/" + relativePath
+    );
     const localChangeFileSubscription = localWatcher.onDidChange(watcherAction);
-
 
     webviewPanel.onDidDispose(() => {
       globalChangeFileSubscription.dispose();
