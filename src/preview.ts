@@ -118,11 +118,11 @@ export default class ImagePreviewProvider
     const relativePath = vscode.workspace.asRelativePath(document.uri);
     const fileName = path.parse(relativePath).base;
     const dirName = path.parse(relativePath).dir;
-    const benUri = vscode.Uri.file(dirName);
+    const fileUri = vscode.Uri.file(dirName);
 
     // This watcher is for files outside the workspace
     let globalWatcher = vscode.workspace.createFileSystemWatcher(
-      new vscode.RelativePattern(benUri, fileName)
+      new vscode.RelativePattern(fileUri, fileName)
     ); // possible to match another image
     const globalChangeFileSubscription =
       globalWatcher.onDidChange(watcherAction);
