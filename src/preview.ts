@@ -106,7 +106,8 @@ export default class ImagePreviewProvider
     this._createWebView(document, webviewPanel);
 
     const watcherAction = async (e: vscode.Uri) => {
-      if (document.uri.path === e.path) {
+      const docUriPath = document.uri.path.replace(/(\/[A-Z]:\/)/, (match) => match.toLowerCase());
+      if (docUriPath === e.path) {
         // filter an event
         const newDocument = await ImagePreviewDocument.create(
           vscode.Uri.parse(e.path)
