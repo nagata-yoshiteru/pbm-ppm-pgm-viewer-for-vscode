@@ -116,27 +116,20 @@ export default class ImagePreviewProvider
       }
     };
 
-    const relativePath = vscode.workspace.asRelativePath(document.uri);
-    const fileName = path.parse(relativePath).base;
-    const dirName = path.parse(relativePath).dir;
+    const absolutePath = document.uri.path;
+    const fileName = path.parse(absolutePath).base;
+    const dirName = path.parse(absolutePath).dir;
     const fileUri = vscode.Uri.file(dirName);
 
-    // This watcher is for files outside the workspace
-    let globalWatcher = vscode.workspace.createFileSystemWatcher(
+    // This watcher is for files both inside and outside the workspace
+    const globalWatcher = vscode.workspace.createFileSystemWatcher(
       new vscode.RelativePattern(fileUri, fileName)
     ); // possible to match another image
     const globalChangeFileSubscription =
       globalWatcher.onDidChange(watcherAction);
 
-    // This watcher is for the files in the workspace
-    let localWatcher = vscode.workspace.createFileSystemWatcher(
-      "**/" + relativePath
-    );
-    const localChangeFileSubscription = localWatcher.onDidChange(watcherAction);
-
     webviewPanel.onDidDispose(() => {
       globalChangeFileSubscription.dispose();
-      localChangeFileSubscription.dispose();
     });
   }
 }
