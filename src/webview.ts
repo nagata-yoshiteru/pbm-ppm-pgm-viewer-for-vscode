@@ -27,7 +27,9 @@ const generateHTMLCanvas = (
           margin: 15px 15px;
           width: 100px;
           ${uiPosition}: 20px;
-          ${hidePanel ? "display: none" : ""}`,
+          ${hidePanel ? "display: none" : ""}
+          -webkit-touch-callout: none;
+          -webkit-user-select: none;`,
     sizingButton: `width: 48%;
                   background-color: ${validateColor(btnColor) ? btnColor : "#dd4535"};
                   display: inline-block;
