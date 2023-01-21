@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.1.1
+
+- Fix auto refresh viewer feature
+
 ## 1.1.0
 
 - Add hide panel feature

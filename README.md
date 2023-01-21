@@ -33,6 +33,10 @@ Built by [Yoshietru Nagata](https://github.com/nagata-yoshiteru) 🇯🇵 , [Ben
 
 ## Release Notes
 
+## 1.1.1
+
+- Fix auto refresh viewer feature
+
 ## 1.1.0
 
 - Add hide panel feature
