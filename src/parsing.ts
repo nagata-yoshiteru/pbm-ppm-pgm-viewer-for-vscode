@@ -207,14 +207,27 @@ const parseByteFormat = (byteData: Uint8Array) => {
       break;
     }
     case "P6": {
+      // Sometimes pixels are stored in 2 bytes instead of just 1, specifically
+      // when Maxval (mc) is greater than 255. See issue #35
+      // offset of colors within a pixel (bytes)
+      let colorOffset = 1;
+      // get the pixel that starts with the byte at index startIdx
+      let getPixel = (startIdx: number) => byteData[startIdx];
+      // Handling for 2-byte pixels
+      if (mc >= 256) {
+        colorOffset = 2;
+        // Most significant byte is stored first
+        getPixel = (startIdx: number) =>
+          (256 * byteData[startIdx] + byteData[startIdx + 1]);
+      }
       while (pixelIndex < totalPixels) {
         colorData.push({
-          r: byteData[index],
-          g: byteData[index + 1],
-          b: byteData[index + 2],
+          r: getPixel(index),
+          g: getPixel(index + colorOffset),
+          b: getPixel(index + 2 * colorOffset),
         });
         pixelIndex += 1;
-        index += 3;
+        index += 3 * colorOffset;
       }
       break;
     }
