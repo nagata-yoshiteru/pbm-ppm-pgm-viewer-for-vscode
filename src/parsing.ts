@@ -49,7 +49,7 @@ const getNextByte = (data: Uint8Array, index: number, isSingleBit: boolean) => {
       ) {
         byteStr += String.fromCharCode(data[i]);
         i++;
-        
+
         if (isSingleBit) {
           break;
         }
@@ -198,7 +198,7 @@ const parseByteFormat = (byteData: Uint8Array) => {
         for (let x = 0; x < width; x++) {
           const byteOffset = (y * bytesPerRow) + Math.floor(x / 8);
           const bitOffset = x % 8;
-          
+
           const byte = byteData[index + byteOffset];
           const colorValue = (1 - ((byte & (0x1 << (7 - bitOffset))) >> (7 - bitOffset))) * 255;
           colorData.push({
@@ -213,9 +213,9 @@ const parseByteFormat = (byteData: Uint8Array) => {
     case "P5": {
       while (pixelIndex < totalPixels) {
         colorData.push({
-          r: getPixel(index),
-          g: getPixel(index),
-          b: getPixel(index),
+          r: (getPixel(index) / mc) * 255,
+          g: (getPixel(index) / mc) * 255,
+          b: (getPixel(index) / mc) * 255,
         });
         pixelIndex += 1;
         index += colorWidth;
@@ -225,9 +225,9 @@ const parseByteFormat = (byteData: Uint8Array) => {
     case "P6": {
       while (pixelIndex < totalPixels) {
         colorData.push({
-          r: getPixel(index),
-          g: getPixel(index + colorWidth),
-          b: getPixel(index + 2 * colorWidth),
+          r: (getPixel(index) / mc) * 255,
+          g: (getPixel(index + colorWidth) / mc) * 255,
+          b: (getPixel(index + 2 * colorWidth) / mc) * 255,
         });
         pixelIndex += 1;
         index += 3 * colorWidth;
