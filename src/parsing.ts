@@ -49,7 +49,7 @@ const getNextByte = (data: Uint8Array, index: number, isSingleBit: boolean) => {
       ) {
         byteStr += String.fromCharCode(data[i]);
         i++;
-        
+
         if (isSingleBit) {
           break;
         }
@@ -118,6 +118,22 @@ const parseByteFormat = (byteData: Uint8Array) => {
     j = i;
   }
 
+  // Sometimes pixels are stored in 2 bytes instead of just 1, specifically
+  // when Maxval (mc) is greater than 255. This is used for both P5 and P6.
+  // See issue #35
+  // bytes per color within a pixel (either for a gray pixel in P5 or each of
+  // the red/green/blue pixels in P6)
+  let colorWidth = 1;
+  // get the pixel that starts with the byte at index startIdx
+  let getPixel = (startIdx: number) => byteData[startIdx];
+  // Handling for 2-byte pixels
+  if (mc >= 256) {
+    colorWidth = 2;
+    // Most significant byte is stored first
+    getPixel = (startIdx: number) =>
+      (256 * byteData[startIdx] + byteData[startIdx + 1]);
+  }
+
   let pixelIndex = 0;
   const totalPixels = width * height;
   let colorData: { r: number; g: number; b: number }[] = [];
@@ -182,7 +198,7 @@ const parseByteFormat = (byteData: Uint8Array) => {
         for (let x = 0; x < width; x++) {
           const byteOffset = (y * bytesPerRow) + Math.floor(x / 8);
           const bitOffset = x % 8;
-          
+
           const byte = byteData[index + byteOffset];
           const colorValue = (1 - ((byte & (0x1 << (7 - bitOffset))) >> (7 - bitOffset))) * 255;
           colorData.push({
@@ -197,24 +213,24 @@ const parseByteFormat = (byteData: Uint8Array) => {
     case "P5": {
       while (pixelIndex < totalPixels) {
         colorData.push({
-          r: byteData[index],
-          g: byteData[index],
-          b: byteData[index],
+          r: (getPixel(index) / mc) * 255,
+          g: (getPixel(index) / mc) * 255,
+          b: (getPixel(index) / mc) * 255,
         });
         pixelIndex += 1;
-        index += 1;
+        index += colorWidth;
       }
       break;
     }
     case "P6": {
       while (pixelIndex < totalPixels) {
         colorData.push({
-          r: byteData[index],
-          g: byteData[index + 1],
-          b: byteData[index + 2],
+          r: (getPixel(index) / mc) * 255,
+          g: (getPixel(index + colorWidth) / mc) * 255,
+          b: (getPixel(index + 2 * colorWidth) / mc) * 255,
         });
         pixelIndex += 1;
-        index += 3;
+        index += 3 * colorWidth;
       }
       break;
     }
