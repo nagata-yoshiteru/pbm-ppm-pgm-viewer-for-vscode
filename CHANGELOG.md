@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.1.2
+
+- Fix for handling P5/P6 images with max pixel value above 255
+
 ## 1.1.1
 
 - Fix auto refresh viewer feature
