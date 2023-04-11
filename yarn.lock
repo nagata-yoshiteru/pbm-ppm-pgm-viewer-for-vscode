@@ -288,6 +288,34 @@
     "@typescript-eslint/types" "5.44.0"
     eslint-visitor-keys "^3.3.0"
 
+"@vscode/vsce@^2.15.0":
+  version "2.18.0"
+  resolved "https://registry.yarnpkg.com/@vscode/vsce/-/vsce-2.18.0.tgz#9f40bf8e7df084a36844b9dadf5c277265c9fbd6"
+  integrity sha512-tUA3XoKx5xjoi3EDcngk0VUYMhvfXLhS4s7CntpLPh1qtLYtgSCexTIMUHkCy6MqyozRW98bdW3a2yHPEADRnQ==
+  dependencies:
+    azure-devops-node-api "^11.0.1"
+    chalk "^2.4.2"
+    cheerio "^1.0.0-rc.9"
+    commander "^6.1.0"
+    glob "^7.0.6"
+    hosted-git-info "^4.0.2"
+    jsonc-parser "^3.2.0"
+    leven "^3.1.0"
+    markdown-it "^12.3.2"
+    mime "^1.3.4"
+    minimatch "^3.0.3"
+    parse-semver "^1.1.1"
+    read "^1.0.7"
+    semver "^5.1.0"
+    tmp "^0.2.1"
+    typed-rest-client "^1.8.4"
+    url-join "^4.0.1"
+    xml2js "^0.4.23"
+    yauzl "^2.3.1"
+    yazl "^2.2.2"
+  optionalDependencies:
+    keytar "^7.7.0"
+
 "@webassemblyjs/ast@1.11.1":
   version "1.11.1"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.11.1.tgz#2bfd767eae1a6996f432ff7e8d7fc75679c0b6a7"
@@ -1647,6 +1675,11 @@ json5@^2.1.2:
   resolved "https://registry.yarnpkg.com/json5/-/json5-2.2.3.tgz#78cd6f1a19bdc12b73db5ad0c61efd66c1e29283"
   integrity sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==
 
+jsonc-parser@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/jsonc-parser/-/jsonc-parser-3.2.0.tgz#31ff3f4c2b9793f89c67212627c51c6394f88e76"
+  integrity sha512-gfFQZrcTc8CnKXp6Y4/CBT3fTc0OVuDofpre4aEeEpSBPV5X5v4+Vmx+8snU7RLPrNHPKSgLxGo9YuQzz20o+w==
+
 keytar@^7.7.0:
   version "7.9.0"
   resolved "https://registry.yarnpkg.com/keytar/-/keytar-7.9.0.tgz#4c6225708f51b50cbf77c5aae81721964c2918cb"
@@ -1987,17 +2020,17 @@ optionator@^0.9.1:
     type-check "^0.4.0"
     word-wrap "^1.2.3"
 
-ovsx@^0.5.2:
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/ovsx/-/ovsx-0.5.2.tgz#174c887746811adae131c9c31363a4756cb5cd9e"
-  integrity sha512-UbLultRCk46WddeA0Cly4hoRhzBJUiLgbIEViXlgOvV54LbsppClDkMLoCevUUBHoiNdMX2NuiSgURAEXgCZdw==
+ovsx@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/ovsx/-/ovsx-0.8.0.tgz#e41dffaa8b6230a684e041c1cfe00d5f5b31344d"
+  integrity sha512-W1U7lgBIbhSB1DcqyGKeenKzmwWYY78SkWd+BUKKyLyqN6w39Uekdr0PKAM7dyBGb0JLtLE7d86A1jJVn8bEng==
   dependencies:
+    "@vscode/vsce" "^2.15.0"
     commander "^6.1.0"
     follow-redirects "^1.14.6"
     is-ci "^2.0.0"
     leven "^3.1.0"
     tmp "^0.2.1"
-    vsce "^2.6.3"
 
 p-limit@^2.2.0:
   version "2.3.0"
@@ -2676,32 +2709,6 @@ validate-color@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/validate-color/-/validate-color-2.1.1.tgz#1330bd71d340ed3420a08fa63b61acbba95e958c"
   integrity sha512-hKG4b7TdXtqom+Uby8LyyxaGK8gEpk60T0stdKXdPSHW+sPOBjJX6B9mFUa9gwQKkNCxvz6e1nxmohZmBWlnBg==
-
-vsce@^2.14.0, vsce@^2.6.3:
-  version "2.14.0"
-  resolved "https://registry.yarnpkg.com/vsce/-/vsce-2.14.0.tgz#f264c427f52cb6c1b1ba2e5f8a84063a034f2438"
-  integrity sha512-LH0j++sHjcFNT++SYcJ86Zyw49GvyoTRfzYJGmaCgfzTyL7MyMhZeVEnj9K9qKh/m1N3/sdWWNxP+PFS/AvWiA==
-  dependencies:
-    azure-devops-node-api "^11.0.1"
-    chalk "^2.4.2"
-    cheerio "^1.0.0-rc.9"
-    commander "^6.1.0"
-    glob "^7.0.6"
-    hosted-git-info "^4.0.2"
-    keytar "^7.7.0"
-    leven "^3.1.0"
-    markdown-it "^12.3.2"
-    mime "^1.3.4"
-    minimatch "^3.0.3"
-    parse-semver "^1.1.1"
-    read "^1.0.7"
-    semver "^5.1.0"
-    tmp "^0.2.1"
-    typed-rest-client "^1.8.4"
-    url-join "^4.0.1"
-    xml2js "^0.4.23"
-    yauzl "^2.3.1"
-    yazl "^2.2.2"
 
 vscode-test@^1.5.0:
   version "1.5.2"
