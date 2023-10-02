@@ -84,16 +84,34 @@ const generateHTMLCanvas = (
 
           function scaleCanvas(targetCanvas, scale) {
             const { colorData, width, height } = message;
-            let ctx = targetCanvas.getContext('2d');
-            targetCanvas.width = width * scale;
-            targetCanvas.height = height * scale;
-            for (let x = 0; x < width; x++){
-              for (let y = 0; y < height; y++){
-                let color = colorData[(y * width) + x];
-                ctx.fillStyle = "rgba(" + color.r + "," + color.g + "," + color.b + "," + 1.0 + ")";
-                ctx.fillRect(x * scale, y * scale, scale, scale);
+
+            // Write the colorData to an ImageData object
+            const data = new Uint8ClampedArray(width * height * 4);
+            for (let row = 0; row < height; row++) {
+              for (let col = 0; col < width; col++) {
+                let color = colorData[row * width + col];
+                let i = row * 4 * width + col * 4;
+                data[i + 0] = color.r;
+                data[i + 1] = color.g;
+                data[i + 2] = color.b;
+                data[i + 3] = 255;
               }
             }
+            const id = new ImageData(data, width, height);
+
+            // Write the ImageData to a background canvas
+            const backCanvas = document.createElement('canvas');
+            backCanvas.width = id.width;
+            backCanvas.height = id.height;
+            backCanvas.getContext('2d').putImageData(id, 0, 0);
+
+            // Scale the target canvas and write the background canvas to it
+            const ctx = targetCanvas.getContext('2d');
+            targetCanvas.width = width * scale;
+            targetCanvas.height = height * scale;
+            ctx.scale(scale, scale);
+            ctx.imageSmoothingEnabled = false;
+            ctx.drawImage(backCanvas, 0, 0);
           }
 
           function showImg(scale) {
