@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.1.5
+
+- Improved rendering method
+
 ## 1.1.4
 
 - Fix Hide Panel setting feature
