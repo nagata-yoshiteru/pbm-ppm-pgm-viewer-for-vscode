@@ -25,7 +25,7 @@ const generateHTMLCanvas = (
           background-color: ${validateColor(bgColor) ? bgColor : "#ec5340"};
           padding: 0px 15px;
           margin: 15px 15px;
-          width: 100px;
+          width: 120px;
           ${uiPosition}: 20px;
           ${hidePanel ? "display: none;" : ""}
           -webkit-touch-callout: none;
@@ -61,6 +61,7 @@ const generateHTMLCanvas = (
             <div onclick="scale = scale / 2; showImg(scale);" style="${styles.sizingButton}">-</div>
           </div>
           <div onclick="scale = 1; showImg(scale);" style="${styles.wideButton}">Reset</div>
+          <div onclick="copyImg();" style="${styles.wideButton}">Copy to Clipboard</div>
           <div onclick="saveImg();" style="${styles.wideButton}">Save as PNG</div>
         </div>
         <div id="canvas-container" style="overflow: auto">
@@ -145,6 +146,18 @@ const generateHTMLCanvas = (
             saveLink.href = saveCanvas.toDataURL();
             saveLink.download = '${saveFilename}';
             saveLink.click();
+          }
+
+          function copyImg() {
+            canvas.toBlob((blob) => {
+              try {
+                navigator.clipboard.write([
+                    new ClipboardItem({ 'image/png': blob })
+                  ]);
+              } catch (error) {
+                console.error(error);
+              }
+            });
           }
 
           const lastPos = { x: 0, y: 0 };
