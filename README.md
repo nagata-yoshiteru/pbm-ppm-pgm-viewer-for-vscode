@@ -1,6 +1,6 @@
 # [PBM/PPM/PGM Viewer for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ngtystr.ppm-pgm-viewer-for-vscode)
 
-Built by [Yoshietru Nagata](https://github.com/nagata-yoshiteru) 🇯🇵 , [Ben Weisz](https://github.com/BenWeisz) 🇨🇦 , [Kensuke Suzuki](https://szk18.github.io/) 🇯🇵 , [DanielS6](https://github.com/DanielS6) and [Jason Frey](https://github.com/Fryguy) 🇺🇸
+Built by [Yoshietru Nagata](https://github.com/nagata-yoshiteru) 🇯🇵 , [Ben Weisz](https://github.com/BenWeisz) 🇨🇦 , [Kensuke Suzuki](https://szk18.github.io/) 🇯🇵 , [DanielS6](https://github.com/DanielS6) , [Jason Frey](https://github.com/Fryguy) 🇺🇸 , [Santiago](https://github.com/santaclose) 🇻🇪
 
 ## Features
 
@@ -32,6 +32,10 @@ Built by [Yoshietru Nagata](https://github.com/nagata-yoshiteru) 🇯🇵 , [Ben
 - None that we know of, but feel free to leave us a github issue :)
 
 ## Release Notes
+
+## 1.2.0
+
+- Add "Copy to Clipboard" button
 
 ## 1.1.5
 
