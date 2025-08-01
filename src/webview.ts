@@ -44,7 +44,9 @@ const generateHTMLCanvas = (
     separator: `border: 0;
                 height: 1px;
                 background-color: white;
-                margin: 0.5rem 0;`
+                margin: 0.5rem 0;`,
+    labelGroup: `padding: 0;
+                 margin: 0;`
   };
 
   return `
@@ -61,13 +63,13 @@ const generateHTMLCanvas = (
           <p id="height-display">Height: ${height}px</p>
           <p id="scale-display">Zoom: 100%</p>
           <div style="margin-bottom: 15px">
-            <p style="margin: 0; padding: 0">Mouse Pixel:</p>
-            <p style="margin: 0; padding: 0" id="pixel-loc-x">X: 0</p>
-            <p style="margin: 0; padding: 0" id="pixel-loc-y">Y: 0</p>
+            <p style="${styles.labelGroup}>Mouse Pixel:</p>
+            <p style="${styles.labelGroup} id="pixel-loc-x">X: 0</p>
+            <p style="${styles.labelGroup} id="pixel-loc-y">Y: 0</p>
             <hr style="${styles.separator}">
-            <p style="margin: 0; padding: 0" id="pixel-color-r">R: 0 (0.0)</p>
-            <p style="margin: 0; padding: 0" id="pixel-color-g">G: 0 (0.0)</p>
-            <p style="margin: 0; padding: 0" id="pixel-color-b">B: 0 (0.0)</p>
+            <p style="${styles.labelGroup} id="pixel-color-r">R: 0 (0.0)</p>
+            <p style="${styles.labelGroup} id="pixel-color-g">G: 0 (0.0)</p>
+            <p style="${styles.labelGroup} id="pixel-color-b">B: 0 (0.0)</p>
           </div>
           <div style="margin-bottom: 5px">
             <div onclick="scale = scale * 2; showImg(scale);" style="${styles.sizingButton}">+</div>
