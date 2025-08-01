@@ -46,7 +46,13 @@ const generateHTMLCanvas = (
                 background-color: white;
                 margin: 0.5rem 0;`,
     labelGroup: `padding: 0;
-                 margin: 0;`
+                 margin: 0;`,
+    colorBox: `position: absolute;
+               right: 0;
+               top: 2px;
+               width: 12px;
+               height: 12px;
+               border: 1px solid white;`,
   };
 
   return `
@@ -58,18 +64,22 @@ const generateHTMLCanvas = (
       </head>
       <body>
         <div style="${styles.info}">
-          <p id="type-display">Type: ${imgType}</p>
-          <p id="width-display">Width: ${width}px</p>
-          <p id="height-display">Height: ${height}px</p>
-          <p id="scale-display">Zoom: 100%</p>
-          <div style="margin-bottom: 15px">
-            <p style="${styles.labelGroup}">Mouse Pixel:</p>
+          <div style="margin: 15px 0">
+            <p style="${styles.labelGroup} font-weight: bolder">Image Info</p>
+            <p style="${styles.labelGroup}" id="type-display">Type: ${imgType}</p>
+            <p style="${styles.labelGroup}" id="width-display">Width: ${width}px</p>
+            <p style="${styles.labelGroup}" id="height-display">Height: ${height}px</p>
+            <p style="${styles.labelGroup}" id="scale-display">Zoom: 100%</p>
+          </div>
+          <hr style="${styles.separator}">
+          <div style="margin-bottom: 15px; position: relative">
+            <p style="${styles.labelGroup} font-weight: bolder">Mouse Pixel</p>
             <p style="${styles.labelGroup}" id="pixel-loc-x">X: 0</p>
             <p style="${styles.labelGroup}" id="pixel-loc-y">Y: 0</p>
-            <hr style="${styles.separator}">
             <p style="${styles.labelGroup}" id="pixel-color-r">R: 0 (0.0)</p>
             <p style="${styles.labelGroup}" id="pixel-color-g">G: 0 (0.0)</p>
             <p style="${styles.labelGroup}" id="pixel-color-b">B: 0 (0.0)</p>
+            <div style="${styles.colorBox}" id="pixel-color-box"></div>
           </div>
           <div style="margin-bottom: 5px">
             <div onclick="scale = scale * 2; showImg(scale);" style="${styles.sizingButton}">+</div>
@@ -97,6 +107,7 @@ const generateHTMLCanvas = (
           const pixelColorRDisplay = document.getElementById('pixel-color-r');
           const pixelColorGDisplay = document.getElementById('pixel-color-g');
           const pixelColorBDisplay = document.getElementById('pixel-color-b');
+          const pixelColorBox = document.getElementById('pixel-color-box');
 
           if(${autoScalingMode}){
             const html = document.getElementsByTagName("html")[0];
@@ -233,6 +244,8 @@ const generateHTMLCanvas = (
 
             const colBF32 = (col.data[2] / 255.0).toFixed(4);
             pixelColorBDisplay.innerHTML = "B: " + String(colBF32) + " (" + String(col.data[2]) + ")";
+
+            pixelColorBox.style.backgroundColor = "rgb(" + String(col.data[0]) + ", " + String(col.data[1]) + ", " + String(col.data[2]) + ")";
           };
 
           function onMouseUp(e) {
