@@ -195,6 +195,7 @@ const generateHTMLCanvas = (
           canvasContainer.onmousedown = onMouseDown;
           canvasContainer.onmousemove = onMouseMove;
           canvasContainer.onmouseup = onMouseUp;
+          canvasContainer.onmouseout = onMouseUp;
 
           window.addEventListener('message', event => {
             message = event.data;
