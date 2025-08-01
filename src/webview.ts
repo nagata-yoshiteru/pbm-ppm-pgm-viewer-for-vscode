@@ -41,6 +41,10 @@ const generateHTMLCanvas = (
                   margin-bottom: 15px;
                   cursor: pointer;
                   user-select: none;`,
+    separator: `border: 0;
+                height: 1px;
+                background-color: white;
+                margin: 0.5rem 0;`
   };
 
   return `
@@ -56,6 +60,15 @@ const generateHTMLCanvas = (
           <p id="width-display">Width: ${width}px</p>
           <p id="height-display">Height: ${height}px</p>
           <p id="scale-display">Zoom: 100%</p>
+          <div style="margin-bottom: 15px">
+            <p style="margin: 0; padding: 0">Mouse Pixel:</p>
+            <p style="margin: 0; padding: 0" id="pixel-loc-x">X: 0</p>
+            <p style="margin: 0; padding: 0" id="pixel-loc-y">Y: 0</p>
+            <hr style="${styles.separator}">
+            <p style="margin: 0; padding: 0" id="pixel-color-r">R: 0 (0.0)</p>
+            <p style="margin: 0; padding: 0" id="pixel-color-g">G: 0 (0.0)</p>
+            <p style="margin: 0; padding: 0" id="pixel-color-b">B: 0 (0.0)</p>
+          </div>
           <div style="margin-bottom: 5px">
             <div onclick="scale = scale * 2; showImg(scale);" style="${styles.sizingButton}">+</div>
             <div onclick="scale = scale / 2; showImg(scale);" style="${styles.sizingButton}">-</div>
@@ -76,6 +89,13 @@ const generateHTMLCanvas = (
           const widthDisplay = document.getElementById('width-display');
           const heightDisplay = document.getElementById('height-display');
           const scaleDisplay = document.getElementById('scale-display');
+
+          const pixelLocXDisplay = document.getElementById('pixel-loc-x');
+          const pixelLocYDisplay = document.getElementById('pixel-loc-y');
+          const pixelColorRDisplay = document.getElementById('pixel-color-r');
+          const pixelColorGDisplay = document.getElementById('pixel-color-g');
+          const pixelColorBDisplay = document.getElementById('pixel-color-b');
+
           if(${autoScalingMode}){
             const html = document.getElementsByTagName("html")[0];
             const alpha = 0.05;
@@ -160,6 +180,11 @@ const generateHTMLCanvas = (
             });
           }
 
+          function clamp(val, min, max)
+          {
+            return Math.min(Math.max(val, min), max);
+          }
+
           const lastPos = { x: 0, y: 0 };
           let isDragging = false;
           const canvasContainer = document.getElementById('canvas-container');
@@ -185,6 +210,27 @@ const generateHTMLCanvas = (
               lastPos.x = e.clientX;
               lastPos.y = e.clientY;
             }
+
+            const boundingRect = canvas.getBoundingClientRect();
+            const canvasSpaceX = clamp(e.clientX - boundingRect.left, 0, boundingRect.width - 1);
+            const canvasSpaceY = clamp(e.clientY - boundingRect.top, 0, boundingRect.height - 1);
+
+            const imageSpaceX = Math.floor(canvasSpaceX / scale);
+            const imageSpaceY = Math.floor(canvasSpaceY / scale);
+            pixelLocXDisplay.innerHTML = "X: " + String(imageSpaceX);
+            pixelLocYDisplay.innerHTML = "Y: " + String(imageSpaceY);
+
+            const ctx = canvas.getContext('2d');
+            const col = ctx.getImageData(canvasSpaceX, canvasSpaceY, boundingRect.width, boundingRect.height);
+
+            const colRF32 = (col.data[0] / 255.0).toFixed(4);
+            pixelColorRDisplay.innerHTML = "R: " + String(colRF32) + " (" + String(col.data[0]) + ")";
+
+            const colGF32 = (col.data[1] / 255.0).toFixed(4);
+            pixelColorGDisplay.innerHTML = "G: " + String(colGF32) + " (" + String(col.data[1]) + ")";
+
+            const colBF32 = (col.data[2] / 255.0).toFixed(4);
+            pixelColorBDisplay.innerHTML = "B: " + String(colBF32) + " (" + String(col.data[2]) + ")";
           };
 
           function onMouseUp(e) {
