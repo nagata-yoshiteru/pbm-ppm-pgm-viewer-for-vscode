@@ -7,7 +7,7 @@
 		"type": "git",
 		"url": "https://github.com/nagata-yoshiteru/pbm-ppm-pgm-viewer-for-vscode"
 	},
-	"version": "1.2.0",
+	"version": "1.3.0",
 	"icon": "images/icon.png",
 	"engines": {
 		"vscode": "^1.55.0"

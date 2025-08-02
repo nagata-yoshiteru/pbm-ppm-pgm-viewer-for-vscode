@@ -17,6 +17,7 @@ Built by [Yoshietru Nagata](https://github.com/nagata-yoshiteru) 🇯🇵 , [Ben
 - Configure the color and the position for your zoom panel
 - Auto refresh viewer when an image file has changes
 - Save an image as PNG format
+- Display pixel coordinates and color values on mouse hover
 
 ## Extension Settings
 
@@ -32,6 +33,11 @@ Built by [Yoshietru Nagata](https://github.com/nagata-yoshiteru) 🇯🇵 , [Ben
 - None that we know of, but feel free to leave us a github issue :)
 
 ## Release Notes
+
+## 1.3.0
+
+- Fix drag operation bug
+- Add pixel coordinates and color value display on mouse hover
 
 ## 1.2.0
 
