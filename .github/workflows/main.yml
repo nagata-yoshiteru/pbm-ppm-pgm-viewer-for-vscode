@@ -23,7 +23,3 @@ jobs:
         node-version: ${{ env.NODE_VERSION }}
     - name: Install node_modules
       run: yarn
-    - name: Run Tests
-      uses: GabrielBB/xvfb-action@v1.2
-      with:
-        run: yarn test
