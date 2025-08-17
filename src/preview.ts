@@ -6,8 +6,7 @@ import { imagePreviewProviderViewType } from "./const";
 
 class ImagePreviewDocument
   extends vscode.Disposable
-  implements vscode.CustomDocument
-{
+  implements vscode.CustomDocument {
   readonly uri: vscode.Uri;
   private documentData: Uint8Array;
 
@@ -21,7 +20,7 @@ class ImagePreviewDocument
   }
 
   private constructor(uri: vscode.Uri, initialData: Uint8Array) {
-    super(() => {});
+    super(() => { });
     this.uri = uri;
     this.documentData = initialData;
   }
@@ -40,8 +39,7 @@ class ImagePreviewDocument
 }
 
 export default class ImagePreviewProvider
-  implements vscode.CustomReadonlyEditorProvider<ImagePreviewDocument>
-{
+  implements vscode.CustomReadonlyEditorProvider<ImagePreviewDocument> {
   private static viewType = imagePreviewProviderViewType;
 
   public static register(context: vscode.ExtensionContext): vscode.Disposable {
@@ -57,7 +55,7 @@ export default class ImagePreviewProvider
     );
   }
 
-  constructor(private readonly _context: vscode.ExtensionContext) {}
+  constructor(private readonly _context: vscode.ExtensionContext) { }
 
   async openCustomDocument(
     uri: vscode.Uri,
