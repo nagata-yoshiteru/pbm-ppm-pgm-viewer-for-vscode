@@ -92,7 +92,7 @@ const parseByteFormat = (byteData: Uint8Array) => {
             imgType === "P5" ||
             imgType === "P6"
           )
-            kl++;
+            {kl++;}
           break;
         case 1:
           width = Number(byteData.subarray(j, i).toString());
