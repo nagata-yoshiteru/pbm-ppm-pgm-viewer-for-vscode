@@ -1,0 +1,48 @@
+p {
+    padding: 0;
+    margin: 0;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background-color: white;
+    margin: 0.5rem 0;
+}
+
+#info-panel {
+    position: fixed;
+    background-color: #ec5340;
+    padding: 0px 15px;
+    margin: 15px 15px;
+    width: 120px;
+    left: 20px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+}
+
+#color-box {
+    position: absolute;
+    right: 0;
+    top: 2px;
+    width: 12px;
+    height: 12px;
+    border: 1px solid white;
+}
+
+#sizing-btn {
+    width: 48%;
+    background-color: #dd4535;
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+#wide-btn {
+    background-color: #dd4535;
+    text-align: center;
+    margin-bottom: 15px;
+    cursor: pointer;
+    user-select: none;
+}
