@@ -5,22 +5,24 @@ const canvas = document.getElementById('canvas-area');
 const canvasContext = canvas.getContext('2d');
 
 // State
-let scale = 1.0;
-let width = 1;
-let height = 1;
-let imageData = null;
+let state = {
+  scale: 1.0,
+  width: 1,
+  height: 1,
+  imageData: null
+};
 
 // Render the image data to the canvas
 const renderScaledImage = () => {
-  if (imageData === null) {
+  if (state.imageData === null) {
     return;
   }
 
-  const canvasImageData = new Uint8ClampedArray(width * height * 4);
-  for (let row = 0; row < height; row++) {
-    for (let col = 0; col < width; col++) {
-      const color = imageData[row * width + col];
-      const offset = row * 4 * width + col * 4;
+  const canvasImageData = new Uint8ClampedArray(state.width * state.height * 4);
+  for (let row = 0; row < state.height; row++) {
+    for (let col = 0; col < state.width; col++) {
+      const color = state.imageData[row * state.width + col];
+      const offset = row * 4 * state.width + col * 4;
 
       canvasImageData[offset + 0] = color.r;
       canvasImageData[offset + 1] = color.g;
@@ -29,25 +31,25 @@ const renderScaledImage = () => {
     }
   }
 
-  const canvasImage = new ImageData(canvasImageData, width, height);
+  const canvasImage = new ImageData(canvasImageData, state.width, state.height);
   const newCanvas = document.createElement('canvas');
   newCanvas.width = canvasImage.width;
   newCanvas.height = canvasImage.height;
   newCanvas.getContext('2d').putImageData(canvasImage, 0, 0);
 
-  canvas.width = width * scale;
-  canvas.height = height * scale;
-  canvasContext.scale(scale, scale);
+  canvas.width = state.width * state.scale;
+  canvas.height = state.height * state.scale;
+  canvasContext.scale(state.scale, state.scale);
   canvasContext.imageSmoothingEnabled = false;
   canvasContext.drawImage(newCanvas, 0, 0);
 };
 
 // Scale the image
 const scaleImage = (factor) => {
-  scale *= factor;
+  state.scale *= factor;
   if (factor === -1)
   {
-    scale = 1.0;
+    state.scale = 1.0;
   }
 
   renderScaledImage();
@@ -60,9 +62,9 @@ const registerMessageHandlers = () => {
 
     // Account for requested data, as well as data pushed for webview update
     if (message.type === 'image-push') {
-      width = message.payload.width;
-      height = message.payload.height;
-      imageData = message.payload.colorData;
+      state.width = message.payload.width;
+      state.height = message.payload.height;
+      state.imageData = message.payload.colorData;
       renderScaledImage();
     }
   });
