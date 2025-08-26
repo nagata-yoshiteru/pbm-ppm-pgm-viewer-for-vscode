@@ -16,7 +16,7 @@
             <p id="type">Type: ${imgType}</p>
             <p id="width">Width: ${width}px</p>
             <p id="height">Height: ${height}px</p>
-            <p id="scale">Zoom: 100%</p>
+            <p id="scale">Scale: 100%</p>
         </div>
         <hr>
         <div style="margin-bottom: 15px; position: relative">
@@ -29,12 +29,12 @@
             <div id="color-box"></div>
         </div>
         <div style="margin-bottom: 5px">
-            <div id="sizing-btn" onclick="scaleImage(2.0)">+</div>
-            <div id="sizing-btn" onclick="scaleImage(0.5)">-</div>
+            <div class="sizing-btn" onclick="scaleImage(2.0)">+</div>
+            <div class="sizing-btn" onclick="scaleImage(0.5)">-</div>
         </div>
-        <div id="wide-btn" onclick="scaleImage(-1)">Reset</div>
-        <div id="wide-btn" onclick="copyImg();">Copy to Clipboard</div>
-        <div id="wide-btn" onclick="saveImg();">Save as PNG</div>
+        <div class="wide-btn" onclick="scaleImage(-1)">Reset</div>
+        <div class="wide-btn" onclick="copyImage();">Copy to Clipboard</div>
+        <div class="wide-btn" onclick="savePNGImage();">Save as PNG</div>
     </div>
     <!-- Image Display-->
     <div style="overflow: auto">

@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
 import * as path from "path";
 import * as fs from 'fs';
+import validateColor from "validate-color";
 
-import generateHTMLCanvas from "./webview";
 import parse from "./parsing";
 import { imagePreviewProviderViewType } from "./const";
 
@@ -72,38 +72,64 @@ export default class ImagePreviewProvider
     imagePreviewDocument: ImagePreviewDocument,
     webviewPanel: vscode.WebviewPanel
   ) {
-      // Load the webview html	
-      const webviewHtmlPath = path.join(this.context.extensionPath, 'src', 'webview', 'webview.html');
-      let webviewHtmlData = fs.readFileSync(webviewHtmlPath, 'utf8');
+    // Load the webview html	
+    const webviewHtmlPath = path.join(this.context.extensionPath, 'src', 'webview', 'webview.html');
+    let webviewHtmlData = fs.readFileSync(webviewHtmlPath, 'utf8');
 
-      // Link the stylesheet and script paths
-      const webviewMediaPath = vscode.Uri.file(path.join(this.context.extensionPath, 'src', 'webview'));
-      const webviewMediaUri = webviewPanel.webview.asWebviewUri(webviewMediaPath);
-      webviewHtmlData = webviewHtmlData.replace(/{{webview}}/g, webviewMediaUri.toString());
+    // Link the stylesheet and script paths
+    const webviewMediaPath = vscode.Uri.file(path.join(this.context.extensionPath, 'src', 'webview'));
+    const webviewMediaUri = webviewPanel.webview.asWebviewUri(webviewMediaPath);
+    webviewHtmlData = webviewHtmlData.replace(/{{webview}}/g, webviewMediaUri.toString());
 
-      // Set the webiew html
-      webviewPanel.webview.html = webviewHtmlData;
+    let val = 'right';
+    // webviewHtmlData = webviewHtmlData.replace(/{{uiPosition}}/g, `${String(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('uiPosition'))}: 20px`);
+    webviewHtmlData = webviewHtmlData.replace(/{{uiPosition}}/g, `style="${val}: 20px"`);
 
-      // Register webview request handler
-      webviewPanel.webview.onDidReceiveMessage((message) => {
-        switch (message.type) {
-          case 'image-fetch':
-            this.updateWebview(imagePreviewDocument, webviewPanel);
-            break;
-        }
-      });
+    // Set the webiew html
+    webviewPanel.webview.html = webviewHtmlData;
 
+    // Register webview request handler
+    webviewPanel.webview.onDidReceiveMessage((message) => {
+      switch (message.type) {
+        case 'image-fetch':
+          this.updateWebview(imagePreviewDocument, webviewPanel);
+          break;
+        case 'extension-settings-fetch':
+          const backgroundColorConfiguration = vscode.workspace.getConfiguration(imagePreviewProviderViewType);
+          let backgroundColor = backgroundColorConfiguration.get<string>('panelBackgroundColor') ?? '#FF00FF';
+          backgroundColor = validateColor(backgroundColor) ? backgroundColor : backgroundColorConfiguration.inspect<string>('panelBackgroundColor')?.defaultValue ?? '#FF00FF';
+
+          const buttonColorConfiguration = vscode.workspace.getConfiguration(imagePreviewProviderViewType);
+          let buttonColor = buttonColorConfiguration.get<string>('panelButtonColor') ?? '#FF00FF';
+          buttonColor = validateColor(buttonColor) ? buttonColor : buttonColorConfiguration.inspect<string>('panelButtonColor')?.defaultValue ?? '#FF00FF';
+
+          webviewPanel.webview.postMessage({
+            type: 'extension-settings-push',
+            payload: {
+              settings: {
+                backgroundColor,
+                buttonColor,
+                defaultScale: Number(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('defaultPreviewScale')),
+                autoScalingMode: Boolean(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('autoScalingMode')),
+                uiPosition: String(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('uiPosition')),
+                hideInfoPanel: Boolean(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('hidePanel'))
+              }
+            }
+          });
+          break;
+      }
+    });
 
     // const data = imagePreviewDocument.imageData;
     // const { status, width, height, imgType } = data;
     // if (status === parse.PARSE_STATUS.SUCCESS) {
-      // webviewPanel.webview.html = generateHTMLCanvas(
-      //   JSON.stringify(data),
-      //   width || 0,
-      //   height || 0,
-      //   imgType || "",
-      //   webviewPanel.title
-      // );
+    // webviewPanel.webview.html = generateHTMLCanvas(
+    //   JSON.stringify(data),
+    //   width || 0,
+    //   height || 0,
+    //   imgType || "",
+    //   webviewPanel.title
+    // );
     // }
   }
 
@@ -114,9 +140,17 @@ export default class ImagePreviewProvider
     const imageData = imagePreviewDocument.imageData;
 
     if (imageData.status === parse.PARSE_STATUS.SUCCESS) {
+      const payload = {
+        width: imageData.width,
+        height: imageData.height,
+        colorData: imageData.colorData,
+        imageType: imageData.imgType,
+        saveFilename: `${path.basename(webviewPanel.title, path.extname(webviewPanel.title))}.png`
+      };
+
       webviewPanel.webview.postMessage({
         type: 'image-push',
-        payload: imageData
+        payload,
       });
     }
     else {

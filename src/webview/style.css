@@ -16,7 +16,6 @@ hr {
     padding: 0px 15px;
     margin: 15px 15px;
     width: 120px;
-    left: 20px;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
 }
@@ -30,7 +29,7 @@ hr {
     border: 1px solid white;
 }
 
-#sizing-btn {
+.sizing-btn {
     width: 48%;
     background-color: #dd4535;
     display: inline-block;
@@ -39,7 +38,7 @@ hr {
     user-select: none;
 }
 
-#wide-btn {
+.wide-btn {
     background-color: #dd4535;
     text-align: center;
     margin-bottom: 15px;
