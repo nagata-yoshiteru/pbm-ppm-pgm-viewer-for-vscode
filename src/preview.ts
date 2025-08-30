@@ -81,10 +81,6 @@ export default class ImagePreviewProvider
     const webviewMediaUri = webviewPanel.webview.asWebviewUri(webviewMediaPath);
     webviewHtmlData = webviewHtmlData.replace(/{{webview}}/g, webviewMediaUri.toString());
 
-    let val = 'right';
-    // webviewHtmlData = webviewHtmlData.replace(/{{uiPosition}}/g, `${String(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('uiPosition'))}: 20px`);
-    webviewHtmlData = webviewHtmlData.replace(/{{uiPosition}}/g, `style="${val}: 20px"`);
-
     // Set the webiew html
     webviewPanel.webview.html = webviewHtmlData;
 
