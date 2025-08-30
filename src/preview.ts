@@ -119,18 +119,6 @@ export default class ImagePreviewProvider
           break;
       }
     });
-
-    // const data = imagePreviewDocument.imageData;
-    // const { status, width, height, imgType } = data;
-    // if (status === parse.PARSE_STATUS.SUCCESS) {
-    // webviewPanel.webview.html = generateHTMLCanvas(
-    //   JSON.stringify(data),
-    //   width || 0,
-    //   height || 0,
-    //   imgType || "",
-    //   webviewPanel.title
-    // );
-    // }
   }
 
   private updateWebview(

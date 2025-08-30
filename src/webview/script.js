@@ -1,12 +1,24 @@
 const vscode = acquireVsCodeApi();
 
 // Get handles to webview elements
+const rootNode = document.documentElement;
+
 const canvasNode = document.getElementById('canvas-area');
+let canvasNodeContext = canvasNode.getContext('2d', { willReadFrequently: true });
+const canvasContainerNode = canvasNode.parentElement;
+
 const infoPanelNode = document.getElementById('info-panel');
 const typeNode = document.getElementById('type');
 const widthNode = document.getElementById('width');
 const heightNode = document.getElementById('height');
 const scaleNode = document.getElementById('scale');
+
+const colorXNode = document.getElementById('color-x');
+const colorYNode = document.getElementById('color-y');
+const colorRNode = document.getElementById('color-r');
+const colorGNode = document.getElementById('color-g');
+const colorBNode = document.getElementById('color-b');
+const colorBoxNode = document.getElementById('color-box');
 
 const sizingButtonNodes = document.querySelectorAll('.sizing-btn');
 const wideButtonNodes = document.querySelectorAll('.wide-btn');
@@ -18,7 +30,12 @@ let state = {
   height: 1,
   imageData: null,
   imageType: '',
-  saveFilename: ''
+  saveFilename: '',
+  isDraggingMouse: false,
+  lastMousePos: {
+    x: 0,
+    y: 0
+  }
 };
 
 let settings = {
@@ -28,6 +45,19 @@ let settings = {
   autoScalingMode: false, // TODO (nagata-yoshiteru): Can you confirm this is meant to be false by default?
   uiPosition: 'left',
   hideInfoPanel: false
+};
+
+// Utility functions
+const debounce = (func, delay) => {
+  let timeoutId;
+  return (...args) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => func(...args), delay);
+  };
+};
+
+const clamp = (v, min, max) => {
+  return Math.min(Math.max(v, min), max);
 };
 
 // Render the image data to the canvas
@@ -65,15 +95,18 @@ const renderScaledImage = (targetCanvas, scale) => {
   targetCanvasContext.drawImage(newCanvas, 0, 0);
 };
 
-// Update UI
-const updateUI = () => {
-  typeNode.innerHTML = `Type: ${state.imageType}`;
-  widthNode.innerHTML = `Width: ${state.width}px`;
-  heightNode.innerHTML = `Height: ${state.height}px`;
-  scaleNode.innerHTML = `Scale: ${String(state.scale * 100)}%`;
-
+// Apply extension settings
+const applyExtensionSettings = () => {
   infoPanelNode.style.backgroundColor = settings.backgroundColor;
   infoPanelNode.style.setProperty(settings.uiPosition, '20px');
+
+  state.scale = settings.defaultScale;
+  if (settings.autoScalingMode) {
+    const html = document.getElementsByTagName('html')[0];
+    const alpha = 0.05;
+    const autoScale = Math.min(html.clientWidth / state.width, html.clientHeight / state.height) * (1 - alpha);
+    state.scale = 2 ** Math.floor(Math.log2(autoScale));
+  }
 
   sizingButtonNodes.forEach(node => {
     node.style.backgroundColor = settings.buttonColor;
@@ -81,13 +114,27 @@ const updateUI = () => {
   wideButtonNodes.forEach(node => {
     node.style.backgroundColor = settings.buttonColor;
   });
+
+  if (settings.hideInfoPanel) {
+    infoPanelNode.style.setProperty('display', 'none');
+  }
+  else {
+    infoPanelNode.style.removeProperty('display');
+  }
+};
+
+// Update UI
+const updateUI = () => {
+  typeNode.innerHTML = `Type: ${state.imageType}`;
+  widthNode.innerHTML = `Width: ${state.width}px`;
+  heightNode.innerHTML = `Height: ${state.height}px`;
+  scaleNode.innerHTML = `Scale: ${String(state.scale * 100)}%`;
 };
 
 // Scale the image
 const scaleImage = (factor) => {
   state.scale *= factor;
-  if (factor === -1)
-  {
+  if (factor === -1) {
     state.scale = 1.0;
   }
 
@@ -98,7 +145,7 @@ const scaleImage = (factor) => {
 // Save the image
 const savePNGImage = () => {
   const saveLink = document.createElement('a');
-  
+
   const saveCanvas = canvasNode.cloneNode(true);
   renderScaledImage(saveCanvas, 1.0);
 
@@ -106,6 +153,7 @@ const savePNGImage = () => {
   saveLink.download = state.saveFilename;
   saveLink.click();
 };
+// TODO (nagata-yoshiteru): Please test in release build as I'm having trouble getting this functionality to work.
 
 // Copy image to clipboard
 const copyImage = () => {
@@ -120,8 +168,58 @@ const copyImage = () => {
   });
 };
 
+// Mouse event handlers
+const onMouseDown = (e) => {
+  state.lastMousePos.x = e.clientX;
+  state.lastMousePos.y = e.clientY;
+  state.isDraggingMouse = true;
+  canvasContainerNode.style.cursor = 'grabbing';
+};
+
+const onMouseMove = (e) => {
+  if (state.isDraggingMouse) {
+    canvasContainerNode.style.cursor = 'grabbing';
+
+    const dx = state.lastMousePos.x - e.clientX;
+    const dy = state.lastMousePos.y - e.clientY;
+
+    canvasContainerNode.scrollLeft += dx;
+    rootNode.scrollTop += dy;
+
+    state.lastMousePos.x = e.clientX;
+    state.lastMousePos.y = e.clientY;
+  }
+
+  // Update hover pixel data
+  const boundingRect = canvasNode.getBoundingClientRect();
+  
+  const canvasSpaceX = clamp(e.clientX - boundingRect.left, 0, boundingRect.width);
+  const canvasSpaceY = clamp(e.clientY - boundingRect.top, 0, boundingRect.height);
+  
+  const imageSpaceX = Math.floor(canvasSpaceX / state.scale);
+  const imageSpaceY = Math.floor(canvasSpaceY / state.scale);
+  colorXNode.innerHTML = `X: ${imageSpaceX}`;
+  colorYNode.innerHTML = `Y: ${imageSpaceY}`;
+
+  const color = canvasNodeContext.getImageData(canvasSpaceX, canvasSpaceY, boundingRect.width, boundingRect.height);
+
+  // TODO (nagata-yoshiteru): Please compile the extension, open boy.ppm, zoom in as far as you can, try moving your mouse over the pixels.
+  // The pixel data in the info panel seems to update much slower than in the released version of the extension, so I want to confirm that this
+  // is slow because I'm testing in debug mode. Thank you!
+  colorRNode.innerHTML = `R: ${(color.data[0] / 255.0).toFixed(4)} (${color.data[0]})`;
+  colorGNode.innerHTML = `G: ${(color.data[1] / 255.0).toFixed(4)} (${color.data[1]})`;
+  colorBNode.innerHTML = `B: ${(color.data[2] / 255.0).toFixed(4)} (${color.data[2]})`;
+  colorBoxNode.style.backgroundColor = `rgb(${color.data[0]}, ${color.data[1]}, ${color.data[2]})`;
+};
+
+const onMouseUp = (e) => {
+  canvasContainerNode.style.cursor = 'grab';
+  state.isDraggingMouse = false;
+};
+
 // Register the message handler(s)
 const registerMessageHandlers = () => {
+  // Extension communication
   window.addEventListener('message', (event) => {
     const message = event.data;
 
@@ -133,16 +231,46 @@ const registerMessageHandlers = () => {
         state.imageData = message.payload.colorData;
         state.imageType = message.payload.imageType;
         state.saveFilename = message.payload.saveFilename;
-        
+
         renderScaledImage(canvasNode, state.scale);
         updateUI();
         break;
       case 'extension-settings-push':
         settings = message.payload.settings;
+
+        // Apply before updating UI because we change the scale here
+        applyExtensionSettings();
+        renderScaledImage(canvasNode, state.scale);
+
         updateUI();
         break;
     }
   });
+
+  // Scroll wheel event
+  window.addEventListener('wheel', debounce((e) => {
+    e.preventDefault();
+    if (!e.ctrlKey) {
+      return;
+    }
+    else if (settings.hideInfoPanel) {
+      return;
+    }
+
+    if (e.deltaY < 0) {
+      scaleImage(2.0);
+    }
+    else {
+      scaleImage(0.5);
+    }
+  }, 20)); // TODO (nagata-yoshiteru): How does this debounce feel to you in the UI? Does it feel unnatural?
+           //                          I added this because on macos it was scrolling really fast.
+
+  // Register mouse handlers
+  canvasContainerNode.onmousedown = onMouseDown;
+  canvasContainerNode.onmousemove = onMouseMove;
+  canvasContainerNode.onmouseup = onMouseUp;
+  canvasContainerNode.onmouseout = onMouseUp;
 };
 
 // Load the extension settings
@@ -163,8 +291,8 @@ const loadImageData = () => {
 const init = async () => {
   registerMessageHandlers();
 
-  await loadExtensionSettings();
   await loadImageData();
+  await loadExtensionSettings();
 };
 
 // Entry point
