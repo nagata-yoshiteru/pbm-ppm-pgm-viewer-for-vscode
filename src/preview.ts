@@ -1,6 +1,8 @@
 import * as vscode from "vscode";
 import * as path from "path";
-import generateHTMLCanvas from "./webview";
+import * as fs from 'fs';
+import validateColor from "validate-color";
+
 import parse from "./parsing";
 import { imagePreviewProviderViewType } from "./const";
 
@@ -55,7 +57,7 @@ export default class ImagePreviewProvider
     );
   }
 
-  constructor(private readonly _context: vscode.ExtensionContext) { }
+  constructor(private readonly context: vscode.ExtensionContext) { }
 
   async openCustomDocument(
     uri: vscode.Uri,
@@ -66,30 +68,77 @@ export default class ImagePreviewProvider
     return document;
   }
 
-  private _createWebView(
-    newDocument: ImagePreviewDocument,
+  private createWebview(
+    imagePreviewDocument: ImagePreviewDocument,
     webviewPanel: vscode.WebviewPanel
   ) {
-    const data = newDocument.imageData;
-    const { status, width, height, imgType } = data;
-    if (status === parse.PARSE_STATUS.SUCCESS) {
-      webviewPanel.webview.html = generateHTMLCanvas(
-        JSON.stringify(data),
-        width || 0,
-        height || 0,
-        imgType || "",
-        webviewPanel.title
-      );
-    }
+    // Load the webview html	
+    const webviewHtmlPath = path.join(this.context.extensionPath, 'src', 'webview', 'webview.html');
+    let webviewHtmlData = fs.readFileSync(webviewHtmlPath, 'utf8');
+
+    // Link the stylesheet and script paths
+    const webviewMediaPath = vscode.Uri.file(path.join(this.context.extensionPath, 'src', 'webview'));
+    const webviewMediaUri = webviewPanel.webview.asWebviewUri(webviewMediaPath);
+    webviewHtmlData = webviewHtmlData.replace(/{{webview}}/g, webviewMediaUri.toString());
+
+    // Set the webiew html
+    webviewPanel.webview.html = webviewHtmlData;
+
+    // Register webview request handler
+    webviewPanel.webview.onDidReceiveMessage((message) => {
+      switch (message.type) {
+        case 'image-fetch':
+          this.updateWebview(imagePreviewDocument, webviewPanel);
+          break;
+        case 'extension-settings-fetch':
+          const backgroundColorConfiguration = vscode.workspace.getConfiguration(imagePreviewProviderViewType);
+          let backgroundColor = backgroundColorConfiguration.get<string>('panelBackgroundColor') ?? '#FF00FF';
+          backgroundColor = validateColor(backgroundColor) ? backgroundColor : backgroundColorConfiguration.inspect<string>('panelBackgroundColor')?.defaultValue ?? '#FF00FF';
+
+          const buttonColorConfiguration = vscode.workspace.getConfiguration(imagePreviewProviderViewType);
+          let buttonColor = buttonColorConfiguration.get<string>('panelButtonColor') ?? '#FF00FF';
+          buttonColor = validateColor(buttonColor) ? buttonColor : buttonColorConfiguration.inspect<string>('panelButtonColor')?.defaultValue ?? '#FF00FF';
+
+          webviewPanel.webview.postMessage({
+            type: 'extension-settings-push',
+            payload: {
+              settings: {
+                backgroundColor,
+                buttonColor,
+                defaultScale: Number(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('defaultPreviewScale')),
+                autoScalingMode: Boolean(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('autoScalingMode')),
+                uiPosition: String(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('uiPosition')),
+                hideInfoPanel: Boolean(vscode.workspace.getConfiguration(imagePreviewProviderViewType).get('hidePanel'))
+              }
+            }
+          });
+          break;
+      }
+    });
   }
 
-  private _updateWebView(
-    newDocument: ImagePreviewDocument,
+  private updateWebview(
+    imagePreviewDocument: ImagePreviewDocument,
     webviewPanel: vscode.WebviewPanel
   ) {
-    const data = newDocument.imageData;
-    if (data.status === parse.PARSE_STATUS.SUCCESS) {
-      webviewPanel.webview.postMessage(data);
+    const imageData = imagePreviewDocument.imageData;
+
+    if (imageData.status === parse.PARSE_STATUS.SUCCESS) {
+      const payload = {
+        width: imageData.width,
+        height: imageData.height,
+        colorData: imageData.colorData,
+        imageType: imageData.imgType,
+        saveFilename: `${path.basename(webviewPanel.title, path.extname(webviewPanel.title))}.png`
+      };
+
+      webviewPanel.webview.postMessage({
+        type: 'image-push',
+        payload,
+      });
+    }
+    else {
+      console.warn("Failed to parse image data!");
     }
   }
 
@@ -101,7 +150,7 @@ export default class ImagePreviewProvider
     webviewPanel.webview.options = {
       enableScripts: true,
     };
-    this._createWebView(document, webviewPanel);
+    this.createWebview(document, webviewPanel);
 
     const watcherAction = async (e: vscode.Uri) => {
       const docUriPath = document.uri.path.replace(/(\/[A-Z]:\/)/, (match) => match.toLowerCase());
@@ -110,7 +159,7 @@ export default class ImagePreviewProvider
         const newDocument = await ImagePreviewDocument.create(
           vscode.Uri.parse(e.path)
         );
-        this._updateWebView(newDocument, webviewPanel);
+        this.updateWebview(newDocument, webviewPanel);
       }
     };
 

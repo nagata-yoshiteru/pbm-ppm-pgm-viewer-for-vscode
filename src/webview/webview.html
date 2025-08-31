@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{webview}}/style.css">
+    <script src="{{webview}}/script.js" defer></script>
+</head>
+
+<body>
+    <!-- UI Panel -->
+    <div id="info-panel" style="display: none">
+        <div style="margin: 15px 0">
+            <p style="font-weight: bolder">Image Info</p>
+            <p id="type">Type: ${imgType}</p>
+            <p id="width">Width: ${width}px</p>
+            <p id="height">Height: ${height}px</p>
+            <p id="scale">Scale: 100%</p>
+        </div>
+        <hr>
+        <div style="margin-bottom: 15px; position: relative">
+            <p style=" font-weight: bolder">Mouse Pixel</p>
+            <p id="color-x">X: 0</p>
+            <p id="color-y">Y: 0</p>
+            <p id="color-r">R: 0 (0.0)</p>
+            <p id="color-g">G: 0 (0.0)</p>
+            <p id="color-b">B: 0 (0.0)</p>
+            <div id="color-box"></div>
+        </div>
+        <div style="margin-bottom: 5px">
+            <div class="sizing-btn" onclick="scaleImage(2.0)">+</div>
+            <div class="sizing-btn" onclick="scaleImage(0.5)">-</div>
+        </div>
+        <div class="wide-btn" onclick="scaleImage(-1)">Reset</div>
+        <div class="wide-btn" onclick="copyImage();">Copy to Clipboard</div>
+        <div class="wide-btn" onclick="savePNGImage();">Save as PNG</div>
+    </div>
+    <!-- Image Display-->
+    <div style="overflow: auto">
+        <canvas id="canvas-area"></canvas>
+    </div>
+</body>
+
+</html>
