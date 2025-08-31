@@ -6,8 +6,8 @@ Built by [Yoshietru Nagata](https://github.com/nagata-yoshiteru) 🇯🇵 , [Ben
 
 - View .pbm/.ppm/.pgm images in the supported formats:
   - PBM (P1, P4)
-  - PPM (P2, P3)
-  - PGM (P5, P6)
+  - PGM (P2, P5)
+  - PPM (P3, P6)
 - Zoom and Scroll
   - Use the zoom panel to zoom in, out or reset your zoom level
   - Use your scroll wheel or drag your mouse to pan around once zoomed in
