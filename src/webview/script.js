@@ -4,7 +4,6 @@ const vscode = acquireVsCodeApi();
 const rootNode = document.documentElement;
 
 const canvasNode = document.getElementById('canvas-area');
-let canvasNodeContext = canvasNode.getContext('2d', { willReadFrequently: true });
 const canvasContainerNode = canvasNode.parentElement;
 
 const infoPanelNode = document.getElementById('info-panel');
@@ -42,7 +41,7 @@ let settings = {
   backgroundColor: '#ec5340',
   buttonColor: '#dd4535',
   defaultScale: 1.0,
-  autoScalingMode: false, // TODO (nagata-yoshiteru): Can you confirm this is meant to be false by default?
+  autoScalingMode: false,
   uiPosition: 'left',
   hideInfoPanel: false
 };
@@ -149,11 +148,10 @@ const savePNGImage = () => {
   const saveCanvas = canvasNode.cloneNode(true);
   renderScaledImage(saveCanvas, 1.0);
 
-  saveLink.href = saveCanvas.toDataUrl();
+  saveLink.href = saveCanvas.toDataURL();
   saveLink.download = state.saveFilename;
   saveLink.click();
 };
-// TODO (nagata-yoshiteru): Please test in release build as I'm having trouble getting this functionality to work.
 
 // Copy image to clipboard
 const copyImage = () => {
@@ -201,11 +199,9 @@ const onMouseMove = (e) => {
   colorXNode.innerHTML = `X: ${imageSpaceX}`;
   colorYNode.innerHTML = `Y: ${imageSpaceY}`;
 
+  const canvasNodeContext = canvasNode.getContext('2d');
   const color = canvasNodeContext.getImageData(canvasSpaceX, canvasSpaceY, boundingRect.width, boundingRect.height);
 
-  // TODO (nagata-yoshiteru): Please compile the extension, open boy.ppm, zoom in as far as you can, try moving your mouse over the pixels.
-  // The pixel data in the info panel seems to update much slower than in the released version of the extension, so I want to confirm that this
-  // is slow because I'm testing in debug mode. Thank you!
   colorRNode.innerHTML = `R: ${(color.data[0] / 255.0).toFixed(4)} (${color.data[0]})`;
   colorGNode.innerHTML = `G: ${(color.data[1] / 255.0).toFixed(4)} (${color.data[1]})`;
   colorBNode.innerHTML = `B: ${(color.data[2] / 255.0).toFixed(4)} (${color.data[2]})`;
@@ -263,8 +259,7 @@ const registerMessageHandlers = () => {
     else {
       scaleImage(0.5);
     }
-  }, 20)); // TODO (nagata-yoshiteru): How does this debounce feel to you in the UI? Does it feel unnatural?
-           //                          I added this because on macos it was scrolling really fast.
+  }, 20));
 
   // Register mouse handlers
   canvasContainerNode.onmousedown = onMouseDown;
