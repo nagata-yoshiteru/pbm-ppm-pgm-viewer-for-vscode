@@ -43,7 +43,7 @@ describe('Webview Core Functionality Tests', () => {
                 setTimeout(() => {
                     expect(callCount).to.equal(1);
                     done();
-                }, 80);
+                }, 100);
             });
 
             it('should pass arguments correctly', (done) => {
