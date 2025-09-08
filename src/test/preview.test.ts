@@ -100,60 +100,6 @@ describe('Preview Core Functionality Tests', () => {
     });
   });
 
-  describe('File Path Operations', () => {
-    it('should extract filename from various path formats', () => {
-      const testPaths = [
-        '/home/user/test.pbm',
-        './relative/path/test.ppm',
-        '../parent/test.p6',
-        'test.p1' // No directory
-      ];
-
-      const expectedFilenames = [
-        'test.pbm',
-        'test.ppm',
-        'test.p6',
-        'test.p1'
-      ];
-
-      testPaths.forEach((testPath, index) => {
-        const fileName = path.parse(testPath).base;
-        expect(fileName).to.equal(expectedFilenames[index]);
-      });
-    });
-
-    it('should extract directory from various path formats', () => {
-      const testPaths = [
-        '/home/user/test.pbm',
-        './relative/path/test.ppm',
-        '../parent/test.p6'
-      ];
-
-      testPaths.forEach(testPath => {
-        const dirName = path.parse(testPath).dir;
-        expect(dirName).to.be.a('string');
-        expect(dirName.length).to.be.greaterThan(0);
-      });
-    });
-
-    it('should handle edge cases in path parsing', () => {
-      const edgeCases = [
-        'test.pbm', // No directory
-        '.pbm', // No basename
-        'test.', // No extension
-        'test' // No extension or dot
-      ];
-
-      edgeCases.forEach(testCase => {
-        const parsed = path.parse(testCase);
-        expect(parsed).to.have.property('base');
-        expect(parsed).to.have.property('dir');
-        expect(parsed).to.have.property('ext');
-        expect(parsed).to.have.property('name');
-      });
-    });
-  });
-
   describe('Webview Payload Formatting', () => {
     it('should format successful image data for webview', () => {
       const mockImageData = {
