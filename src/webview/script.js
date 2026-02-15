@@ -166,6 +166,31 @@ const copyImage = () => {
   });
 };
 
+// Panel drag handlers
+let panelDrag = { active: false, offsetX: 0, offsetY: 0 };
+
+const onPanelMouseDown = (e) => {
+  if (e.target.closest('.sizing-btn') || e.target.closest('.wide-btn')) {
+    return;
+  }
+  panelDrag.active = true;
+  panelDrag.offsetX = e.clientX - infoPanelNode.getBoundingClientRect().left;
+  panelDrag.offsetY = e.clientY - infoPanelNode.getBoundingClientRect().top;
+  e.preventDefault();
+};
+
+const onPanelMouseMove = (e) => {
+  if (!panelDrag.active) return;
+  infoPanelNode.style.left = (e.clientX - panelDrag.offsetX) + 'px';
+  infoPanelNode.style.top = (e.clientY - panelDrag.offsetY) + 'px';
+  infoPanelNode.style.right = 'auto';
+  infoPanelNode.style.margin = '0';
+};
+
+const onPanelMouseUp = () => {
+  panelDrag.active = false;
+};
+
 // Mouse event handlers
 const onMouseDown = (e) => {
   state.lastMousePos.x = e.clientX;
@@ -266,6 +291,11 @@ const registerMessageHandlers = () => {
   canvasContainerNode.onmousemove = onMouseMove;
   canvasContainerNode.onmouseup = onMouseUp;
   canvasContainerNode.onmouseout = onMouseUp;
+
+  // Register panel drag handlers
+  infoPanelNode.addEventListener('mousedown', onPanelMouseDown);
+  window.addEventListener('mousemove', onPanelMouseMove);
+  window.addEventListener('mouseup', onPanelMouseUp);
 };
 
 // Load the extension settings

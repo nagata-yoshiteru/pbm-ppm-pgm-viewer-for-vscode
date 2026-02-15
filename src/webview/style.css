@@ -16,6 +16,7 @@ hr {
     padding: 0px 15px;
     margin: 15px 15px;
     width: 120px;
+    cursor: grab;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
 }
