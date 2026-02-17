@@ -207,7 +207,7 @@ const onMouseMove = (e) => {
     const dy = state.lastMousePos.y - e.clientY;
 
     canvasContainerNode.scrollLeft += dx;
-    rootNode.scrollTop += dy;
+    canvasContainerNode.scrollTop += dy;
 
     state.lastMousePos.x = e.clientX;
     state.lastMousePos.y = e.clientY;
