@@ -59,39 +59,93 @@ const clamp = (v, min, max) => {
   return Math.min(Math.max(v, min), max);
 };
 
+// Precompute sRGB-to-linear lookup table
+const srgbToLinear = new Float32Array(256);
+for (let i = 0; i < 256; i++) {
+  const v = i / 255;
+  srgbToLinear[i] = v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+}
+
+const linearToSrgb = (linear) => {
+  const s = linear <= 0.0031308 ? 12.92 * linear : 1.055 * Math.pow(linear, 1.0 / 2.4) - 0.055;
+  return Math.max(0, Math.min(255, Math.round(s * 255)));
+};
+
+// Cached source canvas, rebuilt when image data changes
+let sourceCanvas = null;
+
+const updateSourceCanvas = () => {
+  sourceCanvas = document.createElement('canvas');
+  sourceCanvas.width = state.width;
+  sourceCanvas.height = state.height;
+  const srcData = new Uint8ClampedArray(state.width * state.height * 4);
+  for (let i = 0; i < state.imageData.length; i++) {
+    const c = state.imageData[i];
+    const offset = i * 4;
+    srcData[offset] = c.r;
+    srcData[offset + 1] = c.g;
+    srcData[offset + 2] = c.b;
+    srcData[offset + 3] = 255;
+  }
+  sourceCanvas.getContext('2d').putImageData(
+    new ImageData(srcData, state.width, state.height), 0, 0
+  );
+};
+
 // Render the image data to the canvas
 const renderScaledImage = (targetCanvas, scale) => {
-  if (state.imageData === null) {
-    return;
-  }
+  if (!sourceCanvas) return;
 
-  // Build image data
-  const canvasImageData = new Uint8ClampedArray(state.width * state.height * 4);
-  for (let row = 0; row < state.height; row++) {
-    for (let col = 0; col < state.width; col++) {
-      const color = state.imageData[row * state.width + col];
-      const offset = row * 4 * state.width + col * 4;
+  const dpr = window.devicePixelRatio || 1;
+  const effectiveScale = scale * dpr;
+  const targetW = Math.round(state.width * scale * dpr);
+  const targetH = Math.round(state.height * scale * dpr);
 
-      canvasImageData[offset + 0] = color.r;
-      canvasImageData[offset + 1] = color.g;
-      canvasImageData[offset + 2] = color.b;
-      canvasImageData[offset + 3] = 255;
+  targetCanvas.width = targetW;
+  targetCanvas.height = targetH;
+  targetCanvas.style.width = (state.width * scale) + 'px';
+  targetCanvas.style.height = (state.height * scale) + 'px';
+
+  if (effectiveScale >= 1) {
+    const ctx = targetCanvas.getContext('2d');
+    ctx.scale(effectiveScale, effectiveScale);
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(sourceCanvas, 0, 0);
+  } else {
+    // Downscaling: gamma-correct box filter in linear light
+    const outData = new Uint8ClampedArray(targetW * targetH * 4);
+    const invScale = 1.0 / effectiveScale;
+
+    for (let y = 0; y < targetH; y++) {
+      const srcY0 = Math.floor(y * invScale);
+      const srcY1 = Math.min(Math.ceil((y + 1) * invScale), state.height);
+      for (let x = 0; x < targetW; x++) {
+        const srcX0 = Math.floor(x * invScale);
+        const srcX1 = Math.min(Math.ceil((x + 1) * invScale), state.width);
+
+        let rLin = 0, gLin = 0, bLin = 0, count = 0;
+        for (let sy = srcY0; sy < srcY1; sy++) {
+          for (let sx = srcX0; sx < srcX1; sx++) {
+            const c = state.imageData[sy * state.width + sx];
+            rLin += srgbToLinear[c.r];
+            gLin += srgbToLinear[c.g];
+            bLin += srgbToLinear[c.b];
+            count++;
+          }
+        }
+
+        const offset = (y * targetW + x) * 4;
+        outData[offset] = linearToSrgb(rLin / count);
+        outData[offset + 1] = linearToSrgb(gLin / count);
+        outData[offset + 2] = linearToSrgb(bLin / count);
+        outData[offset + 3] = 255;
+      }
     }
+
+    targetCanvas.getContext('2d').putImageData(
+      new ImageData(outData, targetW, targetH), 0, 0
+    );
   }
-
-  const canvasImage = new ImageData(canvasImageData, state.width, state.height);
-  const newCanvas = document.createElement('canvas');
-  newCanvas.width = canvasImage.width;
-  newCanvas.height = canvasImage.height;
-  newCanvas.getContext('2d').putImageData(canvasImage, 0, 0);
-
-  targetCanvas.width = state.width * scale;
-  targetCanvas.height = state.height * scale;
-
-  const targetCanvasContext = targetCanvas.getContext('2d');
-  targetCanvasContext.scale(scale, scale);
-  targetCanvasContext.imageSmoothingEnabled = false;
-  targetCanvasContext.drawImage(newCanvas, 0, 0);
 };
 
 // Apply extension settings
@@ -199,8 +253,9 @@ const onMouseMove = (e) => {
   colorXNode.innerHTML = `X: ${imageSpaceX}`;
   colorYNode.innerHTML = `Y: ${imageSpaceY}`;
 
+  const dpr = window.devicePixelRatio || 1;
   const canvasNodeContext = canvasNode.getContext('2d');
-  const color = canvasNodeContext.getImageData(canvasSpaceX, canvasSpaceY, boundingRect.width, boundingRect.height);
+  const color = canvasNodeContext.getImageData(canvasSpaceX * dpr, canvasSpaceY * dpr, 1, 1);
 
   colorRNode.innerHTML = `R: ${(color.data[0] / 255.0).toFixed(4)} (${color.data[0]})`;
   colorGNode.innerHTML = `G: ${(color.data[1] / 255.0).toFixed(4)} (${color.data[1]})`;
@@ -228,6 +283,7 @@ const registerMessageHandlers = () => {
         state.imageType = message.payload.imageType;
         state.saveFilename = message.payload.saveFilename;
 
+        updateSourceCanvas();
         renderScaledImage(canvasNode, state.scale);
         updateUI();
         break;
