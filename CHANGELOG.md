@@ -1,5 +1,12 @@
 # Change Log
 
+## 1.4.0
+
+- Fix brightness issue when scaling images
+- Add draggable UI panel
+- Separate webview into dedicated files
+- Code formatting and cleanup
+
 ## 1.3.0
 
 - Fix drag operation bug
