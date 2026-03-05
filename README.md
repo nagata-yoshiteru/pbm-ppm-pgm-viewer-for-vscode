@@ -34,6 +34,10 @@ Built by [Yoshietru Nagata](https://github.com/nagata-yoshiteru) 🇯🇵 , [Ben
 
 ## Release Notes
 
+## 1.4.1
+
+- Hot fix for #62
+
 ## 1.4.0
 
 - Fix brightness issue when scaling images
