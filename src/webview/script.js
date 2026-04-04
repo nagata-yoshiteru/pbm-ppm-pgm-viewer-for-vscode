@@ -205,7 +205,7 @@ const savePNGImage = () => {
   const saveLink = document.createElement('a');
 
   const saveCanvas = canvasNode.cloneNode(true);
-  renderScaledImage(saveCanvas, 1, true);
+  renderScaledImage(saveCanvas, 1.0, true);
 
   saveLink.href = saveCanvas.toDataURL();
   saveLink.download = state.saveFilename;
