@@ -93,13 +93,15 @@ const updateSourceCanvas = () => {
 };
 
 // Render the image data to the canvas
-const renderScaledImage = (targetCanvas, scale) => {
+const renderScaledImage = (targetCanvas, scale, headless) => {
   if (!sourceCanvas) return;
 
   const dpr = window.devicePixelRatio || 1;
-  const effectiveScale = scale * dpr;
-  const targetW = Math.round(state.width * scale * dpr);
-  const targetH = Math.round(state.height * scale * dpr);
+  if (headless) scale = 1.0;
+
+  const effectiveScale = headless ? 1.0 : scale * dpr;
+  const targetW = Math.round(state.width * effectiveScale);
+  const targetH = Math.round(state.height * effectiveScale);
 
   targetCanvas.width = targetW;
   targetCanvas.height = targetH;
@@ -191,7 +193,7 @@ const scaleImage = (factor) => {
     state.scale = 1.0;
   }
 
-  renderScaledImage(canvasNode, state.scale);
+  renderScaledImage(canvasNode, state.scale, false);
   updateUI();
 };
 
@@ -200,7 +202,7 @@ const savePNGImage = () => {
   const saveLink = document.createElement('a');
 
   const saveCanvas = canvasNode.cloneNode(true);
-  renderScaledImage(saveCanvas, 1.0);
+  renderScaledImage(saveCanvas, 1.0, true);
 
   saveLink.href = saveCanvas.toDataURL();
   saveLink.download = state.saveFilename;
@@ -309,7 +311,7 @@ const registerMessageHandlers = () => {
         state.saveFilename = message.payload.saveFilename;
 
         updateSourceCanvas();
-        renderScaledImage(canvasNode, state.scale);
+        renderScaledImage(canvasNode, state.scale, false);
         updateUI();
         break;
       case 'extension-settings-push':
@@ -317,7 +319,7 @@ const registerMessageHandlers = () => {
 
         // Apply before updating UI because we change the scale here
         applyExtensionSettings();
-        renderScaledImage(canvasNode, state.scale);
+        renderScaledImage(canvasNode, state.scale, false);
 
         updateUI();
         break;
