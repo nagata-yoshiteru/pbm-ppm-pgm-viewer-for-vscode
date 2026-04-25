@@ -96,15 +96,12 @@ const updateSourceCanvas = () => {
 const renderScaledImage = (targetCanvas, scale, headless) => {
   if (!sourceCanvas) return;
 
-  let dpr = window.devicePixelRatio || 1;
-  if (headless) {
-    scale = 1;
-    dpr = 1;
-  }
+  const dpr = window.devicePixelRatio || 1;
+  if (headless) scale = 1.0;
 
-  const effectiveScale = scale * dpr;
-  const targetW = Math.round(state.width * scale * dpr);
-  const targetH = Math.round(state.height * scale * dpr);
+  const effectiveScale = headless ? 1.0 : scale * dpr;
+  const targetW = Math.round(state.width * effectiveScale);
+  const targetH = Math.round(state.height * effectiveScale);
 
   targetCanvas.width = targetW;
   targetCanvas.height = targetH;
