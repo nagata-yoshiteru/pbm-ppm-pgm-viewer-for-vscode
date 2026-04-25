@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.4.2
+
+- Add headless rendering mode for rendering function
+
 ## 1.4.1
 
 - Hot fix for #62
