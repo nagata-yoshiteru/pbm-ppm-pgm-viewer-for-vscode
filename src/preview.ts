@@ -123,7 +123,7 @@ export default class ImagePreviewProvider
   ) {
     const imageData = imagePreviewDocument.imageData;
 
-    if (imageData.status === parse.PARSE_STATUS.SUCCESS) {
+    if (imageData.status === parse.parseStatus.success) {
       const payload = {
         width: imageData.width,
         height: imageData.height,

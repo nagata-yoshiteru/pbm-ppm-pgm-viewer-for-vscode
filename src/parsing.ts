@@ -1,6 +1,6 @@
 const PARSE_STATUS = {
-  SUCCESS: "SUCCESS",
-  FAILURE: "FAILURE",
+  success: "SUCCESS",
+  failure: "FAILURE",
 };
 
 const SPACE = " ".charCodeAt(0);
@@ -168,6 +168,7 @@ const parseByteFormat = (byteData: Uint8Array) => {
         index = data[1];
 
         colorData.push(pixel);
+        pixelIndex += 1;
       }
       break;
     }
@@ -189,6 +190,7 @@ const parseByteFormat = (byteData: Uint8Array) => {
         index = data[1];
 
         colorData.push(pixel);
+        pixelIndex += 1;
       }
       break;
     }
@@ -235,10 +237,10 @@ const parseByteFormat = (byteData: Uint8Array) => {
       break;
     }
     default:
-      return { status: PARSE_STATUS.FAILURE };
+      return { status: PARSE_STATUS.failure };
   }
 
-  return { status: PARSE_STATUS.SUCCESS, colorData, width, height, imgType };
+  return { status: PARSE_STATUS.success, colorData, width, height, imgType };
 };
 
-export default { PARSE_STATUS, parseByteFormat };
+export default { parseStatus: PARSE_STATUS, parseByteFormat };
